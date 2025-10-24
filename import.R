@@ -17,7 +17,7 @@ UU_DF <- data.frame()
 # if dataDF$VAR00 == 1 -> Markpersonal, else Chef  
 dataDF$role <- ifelse(dataDF$VAR00 == 1, "Markpersonal", "Chef")
 
-# markpersonal role - FIX MULTIMPLE ROLES
+# VAR01 - markpersonal role - FIX MULTIMPLE ROLES
 dataDF <- dataDF %>%
   mutate(
     mark_role = pmap_chr(
@@ -47,7 +47,7 @@ dataDF <- dataDF %>%
   )
 dataDF$mark_role_annat <- dataDF$VAR01_6
 
-# Chef role - FIX MULTIMPLE ROLES
+# VAR02 - Chef role - FIX MULTIMPLE ROLES
 dataDF <- dataDF %>%
   mutate(
     chef_role = pmap_chr(
@@ -66,7 +66,7 @@ dataDF <- dataDF %>%
   )
 dataDF$chef_rol_annat <- dataDF$VAR02_7
 
-# age
+# VAR03 - age
 dataDF <- dataDF %>%
   mutate(age = case_when(
     VAR03 == 1 ~ "Under 25 år",
@@ -77,7 +77,7 @@ dataDF <- dataDF %>%
     TRUE ~ NA_character_  # default if none match
   ))
 
-# gender
+# VAR04 - gender
 dataDF <- dataDF %>%
   mutate(gender = case_when(
     VAR04 == 1 ~ "Man",
@@ -87,7 +87,7 @@ dataDF <- dataDF %>%
     TRUE ~ NA_character_  # default if none match
   ))
 
-# Storlek på flygplatsen
+# VAR05 - Storlek på flygplatsen
 dataDF <- dataDF %>%
   mutate(airport_size = case_when(
     VAR05 == 1 ~ "Liten (mindre än 50 anställda)",
@@ -96,7 +96,7 @@ dataDF <- dataDF %>%
     TRUE ~ NA_character_  # default if none match
   ))
 
-# Hur länge har du arbetat på den flygplats där du jobbar nu?
+# VAR06 - Hur länge har du arbetat på den flygplats där du jobbar nu?
 dataDF <- dataDF %>%
   mutate(VAR06_worktime = case_when(
     VAR06 == 1 ~ "Mindre än 1 år",
@@ -107,7 +107,7 @@ dataDF <- dataDF %>%
     TRUE ~ NA_character_  # default if none match
   ))
 
-# Hur länge har du totalt arbetat på flygplats(er)?
+# VAR07 - Hur länge har du totalt arbetat på flygplats(er)?
 dataDF <- dataDF %>%
   mutate(VAR07_worktime = case_when(
     VAR07 == 1 ~ "Mindre än 1 år",
@@ -118,7 +118,7 @@ dataDF <- dataDF %>%
     TRUE ~ NA_character_  # default if none match
   ))
 
-# Vilka av följande tekniska hjälpmedel finns tillgängliga i din arbetsroll på den flygplats där du arbetar?
+# VAR08 - Vilka av följande tekniska hjälpmedel finns tillgängliga i din arbetsroll på den flygplats där du arbetar?
 dataDF <- dataDF %>%
   mutate(
     VAR08_tech = pmap_chr(
@@ -147,7 +147,7 @@ dataDF <- dataDF %>%
     )
   )
 
-# Vilka av följande tekniska hjälpmedel finns tillgängliga för markpersonalen på flygplatsen där du arbetar?
+# VAR09 - Vilka av följande tekniska hjälpmedel finns tillgängliga för markpersonalen på flygplatsen där du arbetar?
 dataDF <- dataDF %>%
   mutate(
     VAR09_tech = pmap_chr(
@@ -234,376 +234,158 @@ dataDF <- dataDF %>%
     )
   )
 
-# VAR12_1 - Hur ofta använder du de tekniska hjälpmedlen? - iPad
+
+# VAR12_ - Hur ofta använder du de tekniska hjälpmedlen?
 dataDF <- dataDF %>%
-  mutate(use_ipad = case_when(
-    VAR12_1 == 1 ~ "Aldrig",
-    VAR12_1 == 2 ~ "Mindre än varje månad",
-    VAR12_1 == 3 ~ "Varje månad",
-    VAR12_1 == 4 ~ "Varje vecka",
-    VAR12_1 == 5 ~ "Dagligen",
-    VAR12_1 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR12_", "useFrequency_", .x), matches("VAR12_")) %>%
+  mutate(across(starts_with("useFrequency_"), ~ case_when(
+    .x == 1 ~ "Aldrig",
+    .x == 2 ~ "Mindre än varje månad",
+    .x == 3 ~ "Varje månad",
+    .x == 4 ~ "Varje vecka",
+    .x == 5 ~ "Dagligen",
+    .x == 6 ~ "Vid varje möjlighet",
+    TRUE ~ NA_character_
+  )))
 
-# VAR12_2 - Hur ofta använder du de tekniska hjälpmedlen? - Smartphone
+
+# NASA TLX
+# VAR13 - mental
 dataDF <- dataDF %>%
-  mutate(use_smartphone = case_when(
-    VAR12_2 == 1 ~ "Aldrig",
-    VAR12_2 == 2 ~ "Mindre än varje månad",
-    VAR12_2 == 3 ~ "Varje månad",
-    VAR12_2 == 4 ~ "Varje vecka",
-    VAR12_2 == 5 ~ "Dagligen",
-    VAR12_2 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
-
-# VAR12_3 - Hur ofta använder du de tekniska hjälpmedlen? - BRS
+  rename_with(~ sub("VAR13_", "NASA-TLX_Mental_", .x), matches("VAR13_"))
+# VAR14 - fysical
 dataDF <- dataDF %>%
-  mutate(use_BRS = case_when(
-    VAR12_3 == 1 ~ "Aldrig",
-    VAR12_3 == 2 ~ "Mindre än varje månad",
-    VAR12_3 == 3 ~ "Varje månad",
-    VAR12_3 == 4 ~ "Varje vecka",
-    VAR12_3 == 5 ~ "Dagligen",
-    VAR12_3 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
-
-# VAR12_4 - Hur ofta använder du de tekniska hjälpmedlen? - De-icing bil
+  rename_with(~ sub("VAR14_", "NASA-TLX_PhysicalDemand_", .x), matches("VAR14_"))
+# VAR15 - Temporal Demand 
 dataDF <- dataDF %>%
-  mutate(use_deicing = case_when(
-    VAR12_4 == 1 ~ "Aldrig",
-    VAR12_4 == 2 ~ "Mindre än varje månad",
-    VAR12_4 == 3 ~ "Varje månad",
-    VAR12_4 == 4 ~ "Varje vecka",
-    VAR12_4 == 5 ~ "Dagligen",
-    VAR12_4 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
-
-# VAR12_5 - Hur ofta använder du de tekniska hjälpmedlen? - Bagagetransport
+  rename_with(~ sub("VAR15_", "NASA-TLX_TemporalDemand_", .x), matches("VAR15_"))
+# VAR16 - Performance
 dataDF <- dataDF %>%
-  mutate(use_bagagetransport = case_when(
-    VAR12_5 == 1 ~ "Aldrig",
-    VAR12_5 == 2 ~ "Mindre än varje månad",
-    VAR12_5 == 3 ~ "Varje månad",
-    VAR12_5 == 4 ~ "Varje vecka",
-    VAR12_5 == 5 ~ "Dagligen",
-    VAR12_5 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
-
-# VAR12_6 - Hur ofta använder du de tekniska hjälpmedlen? - Räddningsfordon
+  rename_with(~ sub("VAR16_", "NASA-TLX_Performance_", .x), matches("VAR16_"))
+# VAR17 - Effort
 dataDF <- dataDF %>%
-  mutate(use_raddningsfordon = case_when(
-    VAR12_6 == 1 ~ "Aldrig",
-    VAR12_6 == 2 ~ "Mindre än varje månad",
-    VAR12_6 == 3 ~ "Varje månad",
-    VAR12_6 == 4 ~ "Varje vecka",
-    VAR12_6 == 5 ~ "Dagligen",
-    VAR12_6 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
-
-# VAR12_7 - Hur ofta använder du de tekniska hjälpmedlen? - Power Stow
+  rename_with(~ sub("VAR17_", "NASA-TLX_Effort_", .x), matches("VAR17_"))
+# VAR18 - Frustration
 dataDF <- dataDF %>%
-  mutate(use_powerstow = case_when(
-    VAR12_7 == 1 ~ "Aldrig",
-    VAR12_7 == 2 ~ "Mindre än varje månad",
-    VAR12_7 == 3 ~ "Varje månad",
-    VAR12_7 == 4 ~ "Varje vecka",
-    VAR12_7 == 5 ~ "Dagligen",
-    VAR12_7 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR18_", "NASA-TLX_Frustration_", .x), matches("VAR18_"))
 
-# VAR12_8 - Hur ofta använder du de tekniska hjälpmedlen? - Lastband (andra än Power Stow)
+
+# change var names of VAR19_X to sun (Tekniken blir svårare att använda i starkt solsken.)
 dataDF <- dataDF %>%
-  mutate(use_lastband = case_when(
-    VAR12_8 == 1 ~ "Aldrig",
-    VAR12_8 == 2 ~ "Mindre än varje månad",
-    VAR12_8 == 3 ~ "Varje månad",
-    VAR12_8 == 4 ~ "Varje vecka",
-    VAR12_8 == 5 ~ "Dagligen",
-    VAR12_8 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR19_", "sun_", .x), matches("VAR19_"))
 
-# VAR12_9 - Hur ofta använder du de tekniska hjälpmedlen? - Tankbil
+# change var names of VAR20_X to snow (Tekniken blir svårare att använda i snö.)
 dataDF <- dataDF %>%
-  mutate(use_tankbil = case_when(
-    VAR12_9 == 1 ~ "Aldrig",
-    VAR12_9 == 2 ~ "Mindre än varje månad",
-    VAR12_9 == 3 ~ "Varje månad",
-    VAR12_9 == 4 ~ "Varje vecka",
-    VAR12_9 == 5 ~ "Dagligen",
-    VAR12_9 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR20_", "snow_", .x), matches("VAR20_"))
 
-# VAR12_10 - Hur ofta använder du de tekniska hjälpmedlen? - Water/Waste
+# change var names of VAR21_X to cold (Tekniken blir svårare att använda i kyla.)
 dataDF <- dataDF %>%
-  mutate(use_water_waste = case_when(
-    VAR12_10 == 1 ~ "Aldrig",
-    VAR12_10 == 2 ~ "Mindre än varje månad",
-    VAR12_10 == 3 ~ "Varje månad",
-    VAR12_10 == 4 ~ "Varje vecka",
-    VAR12_10 == 5 ~ "Dagligen",
-    VAR12_10 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR21_", "cold_", .x), matches("VAR21_"))
 
-# VAR12_11 - Hur ofta använder du de tekniska hjälpmedlen? - Fingerscanner
+# change var names of VAR22_X to rain (Tekniken blir svårare att använda i regn.)
 dataDF <- dataDF %>%
-  mutate(use_fingerscanner = case_when(
-    VAR12_11 == 1 ~ "Aldrig",
-    VAR12_11 == 2 ~ "Mindre än varje månad",
-    VAR12_11 == 3 ~ "Varje månad",
-    VAR12_11 == 4 ~ "Varje vecka",
-    VAR12_11 == 5 ~ "Dagligen",
-    VAR12_11 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR22_", "rain_", .x), matches("VAR22_"))
 
-# VAR12_12 - Hur ofta använder du de tekniska hjälpmedlen? - Lyfthjälpmedel
+# change var names of VAR23_X to dark (Tekniken blir svårare att använda i mörker.)
 dataDF <- dataDF %>%
-  mutate(use_lyfthjalpmedel = case_when(
-    VAR12_12 == 1 ~ "Aldrig",
-    VAR12_12 == 2 ~ "Mindre än varje månad",
-    VAR12_12 == 3 ~ "Varje månad",
-    VAR12_12 == 4 ~ "Varje vecka",
-    VAR12_12 == 5 ~ "Dagligen",
-    VAR12_12 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR23_", "dark_", .x), matches("VAR23_"))
 
-# VAR12_13 - Hur ofta använder du de tekniska hjälpmedlen? - Pushback
+# change var names of VAR24_X to mist (Tekniken blir svårare att använda i dimma.)
 dataDF <- dataDF %>%
-  mutate(use_pushback = case_when(
-    VAR12_13 == 1 ~ "Aldrig",
-    VAR12_13 == 2 ~ "Mindre än varje månad",
-    VAR12_13 == 3 ~ "Varje månad",
-    VAR12_13 == 4 ~ "Varje vecka",
-    VAR12_13 == 5 ~ "Dagligen",
-    VAR12_13 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR24_", "mist_", .x), matches("VAR24_"))
 
-# VAR12_14 - Hur ofta använder du de tekniska hjälpmedlen? - Stationär eller bärbar dator
+
+# VAR25_x - I vilken utsträckning har du medverkat i arbetet att införa det tekniska hjälpmedlet?
 dataDF <- dataDF %>%
-  mutate(use_dator = case_when(
-    VAR12_14 == 1 ~ "Aldrig",
-    VAR12_14 == 2 ~ "Mindre än varje månad",
-    VAR12_14 == 3 ~ "Varje månad",
-    VAR12_14 == 4 ~ "Varje vecka",
-    VAR12_14 == 5 ~ "Dagligen",
-    VAR12_14 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR25_", "introduce_", .x), matches("VAR25_"))
 
-# VAR12_15 - Hur ofta använder du de tekniska hjälpmedlen? - Digitalisering
+# VAR26_x - I vilken utsträckning har du medverkat i att utveckla hur ni jobbar med det tekniska hjälpmedlet? 
 dataDF <- dataDF %>%
-  mutate(use_digitalisering = case_when(
-    VAR12_15 == 1 ~ "Aldrig",
-    VAR12_15 == 2 ~ "Mindre än varje månad",
-    VAR12_15 == 3 ~ "Varje månad",
-    VAR12_15 == 4 ~ "Varje vecka",
-    VAR12_15 == 5 ~ "Dagligen",
-    VAR12_15 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR26_", "develop_", .x), matches("VAR26_"))
 
-# VAR12_16 - Hur ofta använder du de tekniska hjälpmedlen? - Gater
+# VAR27_x - I vilken utsträckning har du fått möjlighet att medverka i införandet av det tekniska hjälpmedlet?
 dataDF <- dataDF %>%
-  mutate(use_gater = case_when(
-    VAR12_16 == 1 ~ "Aldrig",
-    VAR12_16 == 2 ~ "Mindre än varje månad",
-    VAR12_16 == 3 ~ "Varje månad",
-    VAR12_16 == 4 ~ "Varje vecka",
-    VAR12_16 == 5 ~ "Dagligen",
-    VAR12_16 == 6 ~ "Vid varje möjlighet",
-    TRUE ~ NA_character_  # default if none match
-  ))
+  rename_with(~ sub("VAR27_", "possibility_introduce_", .x), matches("VAR27_"))
 
-# ipad
-# VAR13_1 - NASA-TLX ipad - mental
-dataDF$ipad_TLX_MentalDemand <- dataDF$VAR13_1
-# VAR14_1 - NASA-TLX ipad - fysical 
-dataDF$ipad_TLX_PhysicalDemand <- dataDF$VAR14_1
-# VAR15_1 - NASA-TLX ipad -  Temporal Demand 
-dataDF$ipad_TLX_TemporalDemand <- dataDF$VAR15_1
-# VAR16_1 - NASA-TLX ipad - Performance
-dataDF$ipad_TLX_Performance <- dataDF$VAR16_1
-# VAR17_1 - NASA-TLX ipad - Effort
-dataDF$ipad_TLX_Effort <- dataDF$VAR17_1
-# VAR18_1 - NASA-TLX ipad - Frustration
-dataDF$ipad_TLX_Frustration <- dataDF$VAR18_1
+# VAR28_x - I vilken utsträckning har du fått möjlighet att medverka i att utveckla hur ni jobbar med det tekniska hjälpmedlet? 
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR28_", "possibility_develop_", .x), matches("VAR28_"))
 
-# Smartphone
-# VAR13_2 - NASA-TLX  - mental
-dataDF$smartphone_TLX_MentalDemand <- dataDF$VAR13_2
-# VAR14_2 - NASA-TLX  - fysical 
-dataDF$smartphone_TLX_PhysicalDemand <- dataDF$VAR14_2
-# VAR15_2 - NASA-TLX  -  Temporal Demand 
-dataDF$smartphone_TLX_TemporalDemand <- dataDF$VAR15_2
-# VAR16_2 - NASA-TLX  - Performance
-dataDF$smartphone_TLX_Performance <- dataDF$VAR16_2
-# VAR17_2 - NASA-TLX  - Effort
-dataDF$smartphone_TLX_Effort <- dataDF$VAR17_2
-# VAR18_2 - NASA-TLX  - Frustration
-dataDF$smartphone_TLX_Frustration <- dataDF$VAR18_2
+# VAR29_x - I vilken grad upplever du att dina synpunkter har påverkat införandet av det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR29_", "opinion_introduce_", .x), matches("VAR29_"))
 
-# BRS
-# VAR13_3 - NASA-TLX  - mental
-dataDF$BRS_TLX_MentalDemand <- dataDF$VAR13_3
-# VAR14_3 - NASA-TLX  - fysical 
-dataDF$BRS_TLX_PhysicalDemand <- dataDF$VAR14_3
-# VAR15_3 - NASA-TLX  -  Temporal Demand 
-dataDF$BRS_TLX_TemporalDemand <- dataDF$VAR15_3
-# VAR16_3 - NASA-TLX  - Performance
-dataDF$BRS_TLX_Performance <- dataDF$VAR16_3
-# VAR17_3 - NASA-TLX  - Effort
-dataDF$BRS_TLX_Effort <- dataDF$VAR17_3
-# VAR18_3 - NASA-TLX  - Frustration
-dataDF$BRS_TLX_Frustration <- dataDF$VAR18_3
+# VAR30_x -  I vilken grad upplever du att dina synpunkter har påverkat utvecklingen av hur ni jobbar med det tekniska hjälpmedlet? 
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR30_", "opinion_develop_", .x), matches("VAR30_"))
 
-# De-icing bil
-# VAR13_4 - NASA-TLX  - mental
-dataDF$deicing_TLX_MentalDemand <- dataDF$VAR13_4
-# VAR14_4 - NASA-TLX  - fysical 
-dataDF$deicing_TLX_PhysicalDemand <- dataDF$VAR14_4
-# VAR15_4 - NASA-TLX  -  Temporal Demand 
-dataDF$deicing_TLX_TemporalDemand <- dataDF$VAR15_4
-# VAR16_4 - NASA-TLX  - Performance
-dataDF$deicing_TLX_Performance <- dataDF$VAR16_4
-# VAR17_4 - NASA-TLX  - Effort
-dataDF$deicing_TLX_Effort <- dataDF$VAR17_4
-# VAR18_4 - NASA-TLX  - Frustration
-dataDF$deicing_TLX_Frustration <- dataDF$VAR18_4
+# VAR31 - I vilken grad upplever du att arbetsmiljön varit i fokus vid införandet av det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR31_", "environment_introduce_", .x), matches("VAR31_"))
 
-# Bagagetransport
-# VAR13_5 - NASA-TLX  - mental
-dataDF$bagagetransport_TLX_MentalDemand <- dataDF$VAR13_5
-# VAR14_5 - NASA-TLX  - fysical 
-dataDF$bagagetransport_TLX_PhysicalDemand <- dataDF$VAR14_5
-# VAR15_5 - NASA-TLX  -  Temporal Demand 
-dataDF$bagagetransport_TLX_TemporalDemand <- dataDF$VAR15_5
-# VAR16_5 - NASA-TLX  - Performance
-dataDF$bagagetransport_TLX_Performance <- dataDF$VAR16_5
-# VAR17_5 - NASA-TLX  - Effort
-dataDF$bagagetransport_TLX_Effort <- dataDF$VAR17_5
-# VAR18_5 - NASA-TLX  - Frustration
-dataDF$bagagetransport_TLX_Frustration <- dataDF$VAR18_5
+# VAR32 - I vilken grad genomfördes en riskanalys innan det tekniska hjälpmedlet infördes?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR32_", "risk_analysis_", .x), matches("VAR32_"))
 
-# Räddningsfordon
-# VAR13_6 - NASA-TLX  - mental
-dataDF$raddningsfordon_TLX_MentalDemand <- dataDF$VAR13_6
-# VAR14_6 - NASA-TLX  - fysical 
-dataDF$raddningsfordon_TLX_PhysicalDemand <- dataDF$VAR14_6
-# VAR15_6 - NASA-TLX  -  Temporal Demand 
-dataDF$raddningsfordon_TLX_TemporalDemand <- dataDF$VAR15_6
-# VAR16_6 - NASA-TLX  - Performance
-dataDF$raddningsfordon_TLX_Performance <- dataDF$VAR16_6
-# VAR17_6 - NASA-TLX  - Effort
-dataDF$raddningsfordon_TLX_Effort <- dataDF$VAR17_6
-# VAR18_6 - NASA-TLX  - Frustration
-dataDF$raddningsfordon_TLX_Frustration <- dataDF$VAR18_6
+# VAR33 - I vilken utsträckning har dina kollegor i markpersonalen medverkat i utvecklingsarbetet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR33_", "staff_involvement_", .x), matches("VAR33_"))
 
-# Power stow
-# VAR13_7 - NASA-TLX  - mental
-dataDF$powerstow_TLX_MentalDemand <- dataDF$VAR13_7
-# VAR14_7 - NASA-TLX  - fysical 
-dataDF$powerstow_TLX_PhysicalDemand <- dataDF$VAR14_7
-# VAR15_7 - NASA-TLX  -  Temporal Demand 
-dataDF$powerstow_TLX_TemporalDemand <- dataDF$VAR15_7
-# VAR16_7 - NASA-TLX  - Performance
-dataDF$powerstow_TLX_Performance <- dataDF$VAR16_7
-# VAR17_7 - NASA-TLX  - Effort
-dataDF$powerstow_TLX_Effort <- dataDF$VAR17_7
-# VAR18_7 - NASA-TLX  - Frustration
-dataDF$powerstow_TLX_Frustration <- dataDF$VAR18_7
+# VAR34 -  I vilken grad vet du hur du ska gå till väga om du har synpunkter om förbättringar som gäller arbetet med det tekniska hjälpmedlet? 
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR34_", "feedback_", .x), matches("VAR34_"))
 
-# Lastband
-# VAR13_8 - NASA-TLX  - mental
-dataDF$lastband_TLX_MentalDemand <- dataDF$VAR13_8
-# VAR14_8 - NASA-TLX  - fysical 
-dataDF$lastband_TLX_PhysicalDemand <- dataDF$VAR14_8
-# VAR15_8 - NASA-TLX  -  Temporal Demand 
-dataDF$lastband_TLX_TemporalDemand <- dataDF$VAR15_8
-# VAR16_8 - NASA-TLX  - Performance
-dataDF$lastband_TLX_Performance <- dataDF$VAR16_8
-# VAR17_8 - NASA-TLX  - Effort
-dataDF$lastband_TLX_Effort <- dataDF$VAR17_8
-# VAR18_8 - NASA-TLX  - Frustration
-dataDF$lastband_TLX_Frustration <- dataDF$VAR18_8
+# VAR35 - I vilken grad upplever du att det har varit tydligt varför det tekniska hjälpmedlet har införts?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR35_", "clearity_", .x), matches("VAR35_"))
 
-# Tankbil
-# VAR13_9 - NASA-TLX  - mental
-dataDF$tankbil_TLX_MentalDemand <- dataDF$VAR13_9
-# VAR14_9 - NASA-TLX  - fysical 
-dataDF$tankbil_TLX_PhysicalDemand <- dataDF$VAR14_9
-# VAR15_9 - NASA-TLX  -  Temporal Demand 
-dataDF$tankbil_TLX_TemporalDemand <- dataDF$VAR15_9
-# VAR16_9 - NASA-TLX  - Performance
-dataDF$tankbil_TLX_Performance <- dataDF$VAR16_9
-# VAR17_9 - NASA-TLX  - Effort
-dataDF$tankbil_TLX_Effort <- dataDF$VAR17_9
-# VAR18_9 - NASA-TLX  - Frustration
-dataDF$tankbil_TLX_Frustration <- dataDF$VAR18_9
+# VAR36 - I vilken utsträckning har du medverkat i arbetet att införa det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR36_", "participated_", .x), matches("VAR36_"))
 
-# Water/waste
-# VAR13_10 - NASA-TLX  - mental
-dataDF$water_waste_TLX_MentalDemand <- dataDF$VAR13_10
-# VAR14_10 - NASA-TLX  - fysical 
-dataDF$water_waste_TLX_PhysicalDemand <- dataDF$VAR14_10
-# VAR15_10 - NASA-TLX  -  Temporal Demand 
-dataDF$water_waste_TLX_TemporalDemand <- dataDF$VAR15_10
-# VAR16_10 - NASA-TLX  - Performance
-dataDF$water_waste_TLX_Performance <- dataDF$VAR16_10
-# VAR17_10 - NASA-TLX  - Effort
-dataDF$water_waste_TLX_Effort <- dataDF$VAR17_10
-# VAR18_10 - NASA-TLX  - Frustration
-dataDF$water_waste_TLX_Frustration <- dataDF$VAR18_10
+# VAR37 -  I vilken utsträckning har du medverkat i att utveckla hur berörd markpersonal jobbar med det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR37_", "participated_staff_", .x), matches("VAR37_"))
 
-# Fingerscanner
-# VAR13_11 - NASA-TLX  - mental
-dataDF$fingerscanner_TLX_MentalDemand <- dataDF$VAR13_11
-# VAR14_11 - NASA-TLX  - fysical 
-dataDF$fingerscanner_TLX_PhysicalDemand <- dataDF$VAR14_11
-# VAR15_11 - NASA-TLX  -  Temporal Demand 
-dataDF$fingerscanner_TLX_TemporalDemand <- dataDF$VAR15_11
-# VAR16_11 - NASA-TLX  - Performance
-dataDF$fingerscanner_TLX_Performance <- dataDF$VAR16_11
-# VAR17_11 - NASA-TLX  - Effort
-dataDF$fingerscanner_TLX_Effort <- dataDF$VAR17_11
-# VAR18_11 - NASA-TLX  - Frustration
-dataDF$fingerscanner_TLX_Frustration <- dataDF$VAR18_11
+# VAR38 - I vilken utsträckning har berörd markpersonal fått möjlighet att medverka i införandet av det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR38_", "opportunity_introduction_", .x), matches("VAR38_"))
 
-# Lyfthjälpmedel
-# VAR13_12 - NASA-TLX  - mental
-dataDF$lyfthjalpmedel_TLX_MentalDemand <- dataDF$VAR13_12
-# VAR14_12 - NASA-TLX  - fysical 
-dataDF$lyfthjalpmedel_TLX_PhysicalDemand <- dataDF$VAR14_12
-# VAR15_12 - NASA-TLX  -  Temporal Demand 
-dataDF$lyfthjalpmedel_TLX_TemporalDemand <- dataDF$VAR15_12
-# VAR16_12 - NASA-TLX  - Performance
-dataDF$lyfthjalpmedel_TLX_Performance <- dataDF$VAR16_12
-# VAR17_12 - NASA-TLX  - Effort
-dataDF$lyfthjalpmedel_TLX_Effort <- dataDF$VAR17_12
-# VAR18_12 - NASA-TLX  - Frustration
-dataDF$lyfthjalpmedel_TLX_Frustration <- dataDF$VAR18_12
+# VAR39 -  I vilken utsträckning har berörd markpersonal fått möjlighet att medverka i att utveckla hur de jobbar med det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR39_", "opportunity_development_", .x), matches("VAR39_"))
 
-# Pushback
-# VAR13_13 - NASA-TLX  - mental
-dataDF$pushback_TLX_MentalDemand <- dataDF$VAR13_13
-# VAR14_13 - NASA-TLX  - fysical 
-dataDF$pushback_TLX_PhysicalDemand <- dataDF$VAR14_13
-# VAR15_13 - NASA-TLX  -  Temporal Demand 
-dataDF$pushback_TLX_TemporalDemand <- dataDF$VAR15_13
-# VAR16_13 - NASA-TLX  - Performance
-dataDF$pushback_TLX_Performance <- dataDF$VAR16_13
-# VAR17_13 - NASA-TLX  - Effort
-dataDF$pushback_TLX_Effort <- dataDF$VAR17_13
-# VAR18_13 - NASA-TLX  - Frustration
-dataDF$pushback_TLX_Frustration <- dataDF$VAR18_13
+# VAR40 - I vilken grad upplever du att dina synpunkter har påverkat införandet av det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR40_", "opinion_introduce2_", .x), matches("VAR40_"))
+
+# VAR41 - I vilken grad upplever du att dina synpunkter har påverkat utvecklingen av hur berörd markpersonal jobbar med det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR41_", "opinion_develop2_", .x), matches("VAR41_"))
+
+# VAR42 - I vilken grad har arbetsmiljö varit ett fokus när det tekniska hjälpmedlet har införts?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR42_", "environment_introduce2_", .x), matches("VAR42_"))
+
+# VAR43 - I vilken grad genomfördes en riskanalys innan det tekniska hjälpmedlet infördes? 
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR43_", "risk_analysis2_", .x), matches("VAR43_"))
+
+# VAR44 - I vilken utsträckning har dina chefskollegor medverkat i utvecklingsarbetet gällande det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR44_", "chef_development_", .x), matches("VAR44_"))
+
+# VAR45 - I vilken grad har berörd markpersonal fått möjlighet att framföra synpunkter om förbättringar som gäller arbetet med det tekniska hjälpmedlet?
+dataDF <- dataDF %>%
+  rename_with(~ sub("VAR45_", "chef_feedback_", .x), matches("VAR45_"))
+
+
+
+# ipad data and personal data - VARXX_1
+df_subset <- dataDF[, unique(c(1:19, grep("_1\\b", names(dataDF))))]
+
+
+
+
+
+
