@@ -386,6 +386,7 @@ df_subset <- dataDF[, unique(c(1:19, grep("_1\\b", names(dataDF))))]
 
 
 
+dataDF$mark_tech 
 
 
 
