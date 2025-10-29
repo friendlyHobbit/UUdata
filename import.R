@@ -1,9 +1,11 @@
 library(dplyr)
 library(purrr)
 library(stringr)
+library(tidyr)
+library(ggplot2)
 
 
-# read data
+# read data - add data to folder called "data"
 dataDir <- getwd()
 dataDF <- read.csv(file.path(dataDir, "data\\testdata.csv"), sep = ",")
 metaDataDF <- read.csv(file.path(dataDir, "data\\testdata_meta.csv"), sep = ",")
@@ -386,7 +388,285 @@ df_subset <- dataDF[, unique(c(1:19, grep("_1\\b", names(dataDF))))]
 
 
 
-dataDF$mark_tech 
+########### Initial analysis #################
+
+# get people's roles
+dataDF$role <- as.factor(dataDF$role)
+summary(dataDF$role)
+
+# Compute counts per role
+role_counts <- dataDF %>%
+  count(role)
+
+# Plot
+ggplot(role_counts, aes(x = "", y = n, fill = role)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = n),
+            position = position_stack(vjust = 0.5)) +
+  labs(title = "managers vs ground staff counts", fill = "roles") +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+# ground roles
+dataDF$mark_role <- as.factor(dataDF$mark_role)
+summary(dataDF$mark_role)
+
+# Compute counts per role
+role_counts <- dataDF %>%
+  count(mark_role)
+
+# Plot
+ggplot(role_counts, aes(x = "", y = n, fill = mark_role)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = n),  position = position_stack(vjust = 0.5)) +
+  labs(title = "Ground staff roles", fill = "Roles") +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+# boss roles
+dataDF$chef_role <- as.factor(dataDF$chef_role)
+summary(dataDF$chef_role)
+
+# Compute counts per role
+role_counts <- dataDF %>%
+  count(chef_role)
+
+# Plot
+ggplot(role_counts, aes(x = "", y = n, fill = chef_role)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = n),  position = position_stack(vjust = 0.5)) +
+  labs(title = "Ground staff roles", fill = "Roles") +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
 
 
 
+# age
+dataDF$age <- as.factor(dataDF$age)
+summary(dataDF$age)
+
+ggplot(dataDF, aes(x = age)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    x = "age",
+    y = "count"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+
+# gender
+dataDF$gender <- as.factor(dataDF$gender)
+summary(dataDF$gender)
+
+ggplot(dataDF, aes(x = gender)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    x = "gender",
+    y = "count"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+
+# airport size
+dataDF$airport_size <- as.factor(dataDF$airport_size)
+summary(dataDF$airport_size)
+
+ggplot(dataDF, aes(x = airport_size)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    x = "airport_size",
+    y = "count"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+# time at airport
+dataDF$VAR06_worktime <- as.factor(dataDF$VAR06_worktime)
+summary(dataDF$VAR06_worktime)
+
+ggplot(dataDF, aes(x = VAR06_worktime)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    x = "VAR06_worktime",
+    y = "count"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+# time at airports generally
+dataDF$VAR07_worktime <- as.factor(dataDF$VAR07_worktime)
+summary(dataDF$VAR07_worktime)
+
+ggplot(dataDF, aes(x = VAR07_worktime)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    x = "VAR07_worktime",
+    y = "count"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+# available tech
+dataDF <- dataDF %>%
+  mutate(across(starts_with("VAR08_"), ~ factor(case_when(
+    .x == 1 ~ "Ja",
+    .x == 2 ~ "Nej",
+    TRUE ~ NA_character_
+  ))))
+
+# ipad
+summary(dataDF$VAR08_1)
+# Smartphone
+summary(dataDF$VAR08_2)
+# BRS
+summary(dataDF$VAR08_3)
+# De-icing bil
+summary(dataDF$VAR08_4)
+# - Bagagetransport
+summary(dataDF$VAR08_5)
+# Räddningsfordon
+summary(dataDF$VAR08_6)
+# Power Stow
+summary(dataDF$VAR08_7)
+# Lastband
+summary(dataDF$VAR08_8)
+# Tankbil
+summary(dataDF$VAR08_9)
+# Water/Waste
+summary(dataDF$VAR08_10)
+# Fingerscanner
+summary(dataDF$VAR08_11)
+# Lyfthjälpmedel
+summary(dataDF$VAR08_12)
+# Pushback
+summary(dataDF$VAR08_13)
+# dator
+summary(dataDF$VAR08_14)
+# Digitalisering
+summary(dataDF$VAR08_15)
+# Gater
+summary(dataDF$VAR08_16)
+# Ingen
+summary(dataDF$VAR08_17)
+
+data_long <- dataDF %>%
+  pivot_longer(
+    cols = starts_with("VAR08_"),
+    names_to = "Question",
+    values_to = "Response"
+  )
+
+ggplot(data_long, aes(x = Question, fill = Response)) +
+  geom_bar(position = "stack") +
+  geom_text(
+    stat = "count",               # use counts automatically computed by geom_bar
+    aes(label = after_stat(count)),
+    position = position_stack(vjust = 0.5),  # center text within each segment
+    size = 3.5
+  ) +
+  labs(
+    x = "VAR08_",
+    y = "available tech - ground staff answers",
+    title = "VAR8_"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+# get tech people filled nasa TLX in for
+dataDF$job_tech 
+
+dataDF <- dataDF %>%
+  mutate(across(starts_with("VAR10_"), ~ factor(case_when(
+    .x == 1 ~ "Ja",
+    .x == 2 ~ "Nej",
+    TRUE ~ NA_character_
+  ))))
+
+# ipad
+summary(dataDF$VAR10_1)
+# Smartphone
+summary(dataDF$VAR10_2)
+# BRS
+summary(dataDF$VAR10_3)
+# De-icing bil
+summary(dataDF$VAR10_4)
+# - Bagagetransport
+summary(dataDF$VAR10_5)
+# Räddningsfordon
+summary(dataDF$VAR10_6)
+# Power Stow
+summary(dataDF$VAR10_7)
+# Lastband
+summary(dataDF$VAR10_8)
+# Tankbil
+summary(dataDF$VAR10_9)
+# Water/Waste
+summary(dataDF$VAR10_10)
+# Fingerscanner
+summary(dataDF$VAR10_11)
+# Lyfthjälpmedel
+summary(dataDF$VAR10_12)
+# Pushback
+summary(dataDF$VAR10_13)
+# dator
+summary(dataDF$VAR10_14)
+# Digitalisering
+summary(dataDF$VAR10_15)
+# Gater
+summary(dataDF$VAR10_16)
+# Inget ovanstående är av betydelse
+summary(dataDF$VAR10_17)
+
+data_long <- dataDF %>%
+  pivot_longer(
+    cols = starts_with("VAR10_"),
+    names_to = "Question",
+    values_to = "Response"
+  )
+
+# Show
+data_long %>%
+  filter(Response == "Ja") %>%
+  count(Question) %>%                           
+  ggplot(aes(x = Question, y = n, fill = Question)) +
+  geom_col(show.legend = FALSE) +               
+  geom_text(aes(label = n),                     
+            vjust = -0.3, size = 3.5) +         
+  labs(
+    x = "VAR10_",
+    y = "number of 'Ja' answers",
+    title = "The tech ground staff filled nasa TLX in for"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )

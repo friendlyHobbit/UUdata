@@ -1,4 +1,5 @@
 data/
+Results/
 
 *.db
 *.db
@@ -6,6 +7,8 @@ data/
 .Rproj.user
 analysis/.Rhistory
 analysis/.RData
+.RData
+.Rhistory
 .RData
 .Rhistory
 .RData
