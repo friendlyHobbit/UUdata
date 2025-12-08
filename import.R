@@ -3,26 +3,26 @@ library(purrr)
 library(stringr)
 library(tidyr)
 library(ggplot2)
+library(viridis)
 
 
 # read data - add data to folder called "data"
 dataDir <- getwd()
-dataDF <- read.csv(file.path(dataDir, "data\\testdata.csv"), sep = ",")
-metaDataDF <- read.csv(file.path(dataDir, "data\\testdata_meta.csv"), sep = ",")
+dataDF <- read.csv(file.path(dataDir, "data\\SurveyData2025-12-08.csv"), sep = ";")
+
+#metaDataDF <- read.csv(file.path(dataDir, "data\\testdata_meta.csv"), sep = ",")
 
 
 #------------- Restructucture data -------------------
-# new DF
-UU_DF <- data.frame()
 
 # role
 # if dataDF$VAR00 == 1 -> Markpersonal, else Chef  
-dataDF$role <- ifelse(dataDF$VAR00 == 1, "Markpersonal", "Chef")
+dataDF$VAR00 <- ifelse(dataDF$VAR00 == 1, "Markpersonal", "Chef")
 
 # VAR01 - markpersonal role - FIX MULTIMPLE ROLES
 dataDF <- dataDF %>%
   mutate(
-    mark_role = pmap_chr(
+    VAR01 = pmap_chr(
       list(VAR01_1, VAR01_2, VAR01_3, VAR01_4, VAR01_5),
       function(v1, v2, v3, v4, v5) {
         roles <- c()
@@ -254,22 +254,56 @@ dataDF <- dataDF %>%
 # NASA TLX
 # VAR13 - mental
 dataDF <- dataDF %>%
-  rename_with(~ sub("VAR13_", "NASA-TLX_Mental_", .x), matches("VAR13_"))
+  rename_with(~ sub("VAR13_", "TLX_Mental_", .x), matches("VAR13_"))
 # VAR14 - fysical
 dataDF <- dataDF %>%
-  rename_with(~ sub("VAR14_", "NASA-TLX_PhysicalDemand_", .x), matches("VAR14_"))
+  rename_with(~ sub("VAR14_", "TLX_Physical_", .x), matches("VAR14_"))
 # VAR15 - Temporal Demand 
 dataDF <- dataDF %>%
-  rename_with(~ sub("VAR15_", "NASA-TLX_TemporalDemand_", .x), matches("VAR15_"))
+  rename_with(~ sub("VAR15_", "TLX_Temporal_", .x), matches("VAR15_"))
 # VAR16 - Performance
 dataDF <- dataDF %>%
-  rename_with(~ sub("VAR16_", "NASA-TLX_Performance_", .x), matches("VAR16_"))
+  rename_with(~ sub("VAR16_", "TLX_Performance_", .x), matches("VAR16_"))
 # VAR17 - Effort
 dataDF <- dataDF %>%
-  rename_with(~ sub("VAR17_", "NASA-TLX_Effort_", .x), matches("VAR17_"))
+  rename_with(~ sub("VAR17_", "TLX_Effort_", .x), matches("VAR17_"))
 # VAR18 - Frustration
 dataDF <- dataDF %>%
-  rename_with(~ sub("VAR18_", "NASA-TLX_Frustration_", .x), matches("VAR18_"))
+  rename_with(~ sub("VAR18_", "TLX_Frustration_", .x), matches("VAR18_"))
+# Nasa-TLX total
+for (i in 1:16) {
+  dataDF[[paste0("TLX_Sum_", i)]] <-
+    dataDF[[paste0("TLX_Frustration_", i)]] +
+    dataDF[[paste0("TLX_Effort_", i)]] +
+    dataDF[[paste0("TLX_Performance_", i)]] +
+    dataDF[[paste0("TLX_Temporal_", i)]] +
+    dataDF[[paste0("TLX_Physical_", i)]] +
+    dataDF[[paste0("TLX_Mental_", i)]] 
+}
+
+# subset Nasa-TLX and other relevant data
+df_tlx <- dataDF[grepl("TLX", names(dataDF))]
+
+# remove empty rows
+#df_tlx <- df_tlx[rowSums(is.na(df_tlx)) != ncol(df_tlx), ]
+
+
+
+# visualize sum data per tech with jitter
+df_tlx %>%
+  ggplot( aes(y=`NASA-TLX_Mental_1`)) +
+  geom_boxplot() +
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+  geom_jitter(color="black", size=0.4, alpha=0.9) +
+  #theme_ipsum() +
+  theme(
+    legend.position="none",
+    plot.title = element_text(size=11)
+  ) +
+  ggtitle("A boxplot with jitter") +
+  xlab("")
+
+
 
 
 # change var names of VAR19_X to sun (Tekniken blir svårare att använda i starkt solsken.)
