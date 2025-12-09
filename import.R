@@ -19,58 +19,50 @@ dataDF <- read.csv(file.path(dataDir, "data\\SurveyData2025-12-08.csv"), sep = "
 # if dataDF$VAR00 == 1 -> Markpersonal, else Chef  
 dataDF$VAR00 <- ifelse(dataDF$VAR00 == 1, "Markpersonal", "Chef")
 
-# VAR01 - markpersonal role - FIX MULTIMPLE ROLES
-dataDF <- dataDF %>%
+# recode roles VAR01, VAR02
+dataDF <- dataDF |>
   mutate(
-    VAR01 = pmap_chr(
-      list(VAR01_1, VAR01_2, VAR01_3, VAR01_4, VAR01_5),
-      function(v1, v2, v3, v4, v5) {
-        roles <- c()
-        if (isTRUE(v1 == 1)) roles <- c(roles, "Lastare/Sorterare")
-        if (isTRUE(v2 == 1)) roles <- c(roles, "Flygplanstankare")
-        if (isTRUE(v3 == 1)) roles <- c(roles, "Flygplatstekniker")
-        if (isTRUE(v4 == 1)) roles <- c(roles, "Skyddsombud/facklig")
-        if (isTRUE(v5 == 1)) roles <- c(roles, "Annat")
-        if (length(roles) == 0) NA_character_ else str_c(roles, collapse = ", ")
-      }
-    )
+    VAR01_1 = recode(VAR01_1, `1` = "Lastare/Sorterare", `2` = NULL, .default = NULL),
+    VAR01_2 = recode(VAR01_2, `1` = "Flygplanstankare", `2` = NULL, .default = NULL),
+    VAR01_3 = recode(VAR01_3, `1` = "Flygplatstekniker", `2` = NULL, .default = NULL),
+    VAR01_4 = recode(VAR01_4, `1` = "Skyddsombud/facklig", `2` = NULL, .default = NULL),
+    VAR01_5 = recode(VAR01_5, `1` = "Annat", `2` = NULL, .default = NULL),
+    VAR02_1 = recode(VAR02_1, `1` = "Flygplatschef", `2` = NULL, .default = NULL),
+    VAR02_2 = recode(VAR02_2, `1` = "Teknisk chef", `2` = NULL, .default = NULL),
+    VAR02_3 = recode(VAR02_3, `1` = "Operativt ansvarig", `2` = NULL, .default = NULL),
+    VAR02_4 = recode(VAR02_4, `1` = "Arbetsmiljöansvarig", `2` = NULL, .default = NULL),
+    VAR02_5 = recode(VAR02_5, `1` = "Skyddsombud/facklig", `2` = NULL, .default = NULL),
+    VAR02_6 = recode(VAR02_6, `1` = "Annat", `2` = NULL, .default = NULL),
   )
 
-dataDF <- dataDF %>%
-  mutate(
-    mark_role = case_when(
-      VAR01_1 == 1 ~ "Lastare/Sorterare",
-      VAR01_2 == 1 ~ "Flygplanstankare",
-      VAR01_3 == 1 ~ "Flygplatstekniker",
-      VAR01_4 == 1 ~ "Skyddsombud/facklig",
-      VAR01_5 == 1 ~ "Annat",
-      TRUE ~ NA_character_
-    )
-  )
-dataDF$mark_role_annat <- dataDF$VAR01_6
+# these need fixing, something goes wrong
+dataDF$VAR01_6 <- ifelse(dataDF$VAR01_6=="", dataDF$VAR01_6<-NA, dataDF$VAR01_6<-dataDF$VAR01_6)
+dataDF$VAR02_7 <- ifelse(dataDF$VAR02_7=="", dataDF$VAR02_7<-NA, dataDF$VAR02_7<-dataDF$VAR02_7)
 
-# VAR02 - Chef role - FIX MULTIMPLE ROLES
-dataDF <- dataDF %>%
-  mutate(
-    chef_role = pmap_chr(
-      list(VAR02_1, VAR02_2, VAR02_3, VAR02_4, VAR02_5, VAR02_6),
-      function(v1, v2, v3, v4, v5, v6) {
-        roles <- c()
-        if (isTRUE(v1 == 1)) roles <- c(roles, "Flygplatschef")
-        if (isTRUE(v2 == 1)) roles <- c(roles, "Teknisk chef")
-        if (isTRUE(v3 == 1)) roles <- c(roles, "Operativt ansvarig")
-        if (isTRUE(v4 == 1)) roles <- c(roles, "Arbetsmiljöansvarig")
-        if (isTRUE(v5 == 1)) roles <- c(roles, "Skyddsombud/facklig")
-        if (isTRUE(v6 == 1)) roles <- c(roles, "Annat")
-        if (length(roles) == 0) NA_character_ else str_c(roles, collapse = ", ")
-      }
-    )
+#subset
+RoleDF <- subset(dataDF, select = ID:VAR02_7)
+
+longDF <- RoleDF %>%
+  pivot_longer(
+    cols = matches("VAR01_|VAR02_"),
+    names_to = c(".value", "type"),
+    names_pattern = "(VAR\\d{2})_(\\d+)",
+    values_drop_na = TRUE
   )
-dataDF$chef_rol_annat <- dataDF$VAR02_7
+longDF<-subset(longDF, select = -c(type))
+
+longDF$VAR01_VAR02 <- longDF$VAR01 
+longDF$VAR01_VAR02 <- ifelse(!is.na(longDF$VAR01_VAR02), longDF$VAR01_VAR02<-longDF$VAR01_VAR02, longDF$VAR01_VAR02<-longDF$VAR02)
+
+# merge longDF back into dataDF
+dataDF <- subset(dataDF, select=-c(VAR01_1, VAR01_2,VAR01_3, VAR01_4, VAR01_5, VAR02_1, VAR02_2, VAR02_3, VAR02_4, VAR02_5, VAR02_6))
+PH_DF <- merge(dataDF, longDF, by = "ID")
+dataDF <- PH_DF
+
 
 # VAR03 - age
 dataDF <- dataDF %>%
-  mutate(age = case_when(
+  mutate(VAR03 = case_when(
     VAR03 == 1 ~ "Under 25 år",
     VAR03 == 2 ~ "25-34 år",
     VAR03 == 3 ~ "35-44 år",
@@ -81,7 +73,7 @@ dataDF <- dataDF %>%
 
 # VAR04 - gender
 dataDF <- dataDF %>%
-  mutate(gender = case_when(
+  mutate(VAR04 = case_when(
     VAR04 == 1 ~ "Man",
     VAR04 == 2 ~ "Kvinna",
     VAR04 == 3 ~ "Annat",
@@ -91,7 +83,7 @@ dataDF <- dataDF %>%
 
 # VAR05 - Storlek på flygplatsen
 dataDF <- dataDF %>%
-  mutate(airport_size = case_when(
+  mutate(VAR05 = case_when(
     VAR05 == 1 ~ "Liten (mindre än 50 anställda)",
     VAR05 == 2 ~ "Medelstor (mellan 50-150 anställda)",
     VAR05 == 3 ~ "Stor (över 150 anställda)",
@@ -100,7 +92,7 @@ dataDF <- dataDF %>%
 
 # VAR06 - Hur länge har du arbetat på den flygplats där du jobbar nu?
 dataDF <- dataDF %>%
-  mutate(VAR06_worktime = case_when(
+  mutate(VAR06 = case_when(
     VAR06 == 1 ~ "Mindre än 1 år",
     VAR06 == 2 ~ "1–5 år",
     VAR06 == 3 ~ "6–10 år",
@@ -111,7 +103,7 @@ dataDF <- dataDF %>%
 
 # VAR07 - Hur länge har du totalt arbetat på flygplats(er)?
 dataDF <- dataDF %>%
-  mutate(VAR07_worktime = case_when(
+  mutate(VAR07 = case_when(
     VAR07 == 1 ~ "Mindre än 1 år",
     VAR07 == 2 ~ "1–5 år",
     VAR07 == 3 ~ "6–10 år",
@@ -120,121 +112,54 @@ dataDF <- dataDF %>%
     TRUE ~ NA_character_  # default if none match
   ))
 
-# VAR08 - Vilka av följande tekniska hjälpmedel finns tillgängliga i din arbetsroll på den flygplats där du arbetar?
-dataDF <- dataDF %>%
-  mutate(
-    VAR08_tech = pmap_chr(
-      list(VAR08_1, VAR08_2, VAR08_3, VAR08_4, VAR08_5, VAR08_6, VAR08_7, VAR08_8, VAR08_9, VAR08_10, VAR08_11, VAR08_12, VAR08_13, VAR08_14, VAR08_15, VAR08_16, VAR08_17),
-      function(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17) {
-        tech <- c()
-        if (isTRUE(v1 == 1)) tech <- c(tech, "iPad")
-        if (isTRUE(v2 == 1)) tech <- c(tech, "Smartphone")
-        if (isTRUE(v3 == 1)) tech <- c(tech, "BRS")
-        if (isTRUE(v4 == 1)) tech <- c(tech, "De-icing bil")
-        if (isTRUE(v5 == 1)) tech <- c(tech, "Bagagetransport")
-        if (isTRUE(v6 == 1)) tech <- c(tech, "Bagagetransport")
-        if (isTRUE(v7 == 1)) tech <- c(tech, "Power Stow")
-        if (isTRUE(v8 == 1)) tech <- c(tech, "Lastband")
-        if (isTRUE(v9 == 1)) tech <- c(tech, "Tankbil")
-        if (isTRUE(v10 == 1)) tech <- c(tech, "Water/Waste")
-        if (isTRUE(v11 == 1)) tech <- c(tech, "Fingerscanner")
-        if (isTRUE(v12 == 1)) tech <- c(tech, "Lyfthjälpmedel")
-        if (isTRUE(v13 == 1)) tech <- c(tech, "Pushback")
-        if (isTRUE(v14 == 1)) tech <- c(tech, "Stationär eller bärbar dator")
-        if (isTRUE(v15 == 1)) tech <- c(tech, "Digitalisering (i allmänhet)")
-        if (isTRUE(v16 == 1)) tech <- c(tech, "Gater")
-        if (isTRUE(v17 == 1)) tech <- c(tech, "Inget ovanstående")
-        if (length(tech) == 0) NA_character_ else str_c(tech, collapse = ", ")
-      }
-    )
-  )
+# function to recode tech
+RecodeTech <- function(df, var1, var2, var3, var4, var5, var6, var7, var8, var9, var10, var11, var12, var13, var14, var15, var16, var17) { 
+  df <- df |>
+    mutate(
+      var1 = recode(var1, `1` = "iPad", `2` = NULL, .default = NULL),
+      var2 = recode(var2, `1` = "Smartphone", `2` = NULL, .default = NULL),
+      var3 = recode(var3, `1` = "BRS", `2` = NULL, .default = NULL),
+      var4 = recode(var4, `1` = "De-icing bil", `2` = NULL, .default = NULL),
+      var5 = recode(var5, `1` = "Bagagetransport", `2` = NULL, .default = NULL),
+      var6 = recode(var6, `1` = "Räddningsfordon", `2` = NULL, .default = NULL),
+      var7 = recode(var7, `1` = "Power Stow", `2` = NULL, .default = NULL),
+      var8 = recode(var8, `1` = "Lastband", `2` = NULL, .default = NULL),
+      var9 = recode(var9, `1` = "Tankbil", `2` = NULL, .default = NULL),
+      var10 = recode(var10, `1` = "Water/Waste", `2` = NULL, .default = NULL),
+      var11 = recode(var11, `1` = "Fingerscanner", `2` = NULL, .default = NULL),
+      var12 = recode(var12, `1` = "Lyfthjälpmedel", `2` = NULL, .default = NULL),
+      var13 = recode(var13, `1` = "Pushback", `2` = NULL, .default = NULL),
+      var14 = recode(var14, `1` = "Stationär eller bärbar dator", `2` = NULL, .default = NULL),
+      var15 = recode(var15, `1` = "Digitalisering (i allmänhet)", `2` = NULL, .default = NULL),
+      var16 = recode(var16, `1` = "Gater", `2` = NULL, .default = NULL),
+      var17 = recode(var17, `1` = "Inget ovanstående", `2` = NULL, .default = NULL),
+    )  
+}
+
+# recode VAR08 - Vilka av följande tekniska hjälpmedel finns tillgängliga i din arbetsroll på den flygplats där du arbetar?
+RecodeTech(dataDF, dataDF$VAR08_1, dataDF$VAR08_2, dataDF$VAR08_3, dataDF$VAR08_4, dataDF$VAR08_5, 
+           dataDF$VAR08_6, dataDF$VAR08_7, dataDF$VAR08_8, dataDF$VAR08_9, dataDF$VAR08_10,
+           dataDF$VAR08_11, dataDF$VAR08_12, dataDF$VAR08_13, dataDF$VAR08_14, dataDF$VAR08_15, 
+           dataDF$VAR08_16, dataDF$VAR08_17)
 
 # VAR09 - Vilka av följande tekniska hjälpmedel finns tillgängliga för markpersonalen på flygplatsen där du arbetar?
-dataDF <- dataDF %>%
-  mutate(
-    VAR09_tech = pmap_chr(
-      list(VAR09_1, VAR09_2, VAR09_3, VAR09_4, VAR09_5, VAR09_6, VAR09_7, VAR09_8, VAR09_9, VAR09_10, VAR09_11, VAR09_12, VAR09_13, VAR09_14, VAR09_15, VAR09_16, VAR09_17),
-      function(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17) {
-        tech <- c()
-        if (isTRUE(v1 == 1)) tech <- c(tech, "iPad")
-        if (isTRUE(v2 == 1)) tech <- c(tech, "Smartphone")
-        if (isTRUE(v3 == 1)) tech <- c(tech, "BRS")
-        if (isTRUE(v4 == 1)) tech <- c(tech, "De-icing bil")
-        if (isTRUE(v5 == 1)) tech <- c(tech, "Bagagetransport")
-        if (isTRUE(v6 == 1)) tech <- c(tech, "Räddningsfordon")
-        if (isTRUE(v7 == 1)) tech <- c(tech, "Power Stow")
-        if (isTRUE(v8 == 1)) tech <- c(tech, "Lastband")
-        if (isTRUE(v9 == 1)) tech <- c(tech, "Tankbil")
-        if (isTRUE(v10 == 1)) tech <- c(tech, "Water/Waste")
-        if (isTRUE(v11 == 1)) tech <- c(tech, "Fingerscanner")
-        if (isTRUE(v12 == 1)) tech <- c(tech, "Lyfthjälpmedel")
-        if (isTRUE(v13 == 1)) tech <- c(tech, "Pushback")
-        if (isTRUE(v14 == 1)) tech <- c(tech, "Stationär eller bärbar dator")
-        if (isTRUE(v15 == 1)) tech <- c(tech, "Digitalisering (i allmänhet)")
-        if (isTRUE(v16 == 1)) tech <- c(tech, "Gater")
-        if (isTRUE(v17 == 1)) tech <- c(tech, "Inget ovanstående")
-        if (length(tech) == 0) NA_character_ else str_c(tech, collapse = ", ")
-      }
-    )
-  )
+RecodeTech(dataDF, dataDF$VAR09_1, dataDF$VAR09_2, dataDF$VAR09_3, dataDF$VAR09_4, dataDF$VAR09_5, 
+           dataDF$VAR09_6, dataDF$VAR09_7, dataDF$VAR09_8, dataDF$VAR09_9, dataDF$VAR09_10,
+           dataDF$VAR09_11, dataDF$VAR09_12, dataDF$VAR09_13, dataDF$VAR09_14, dataDF$VAR09_15, 
+           dataDF$VAR09_16, dataDF$VAR09_17)
 
 # VAR10 - Välj max två tekniska hjälpmedel som du anser har betydelse för arbetsmiljön i ditt arbete.
-dataDF <- dataDF %>%
-  mutate(
-    job_tech = pmap_chr(
-      list(VAR10_1, VAR10_2, VAR10_3, VAR10_4, VAR10_5, VAR10_6, VAR10_7, VAR10_8, VAR10_9, VAR10_10, VAR10_11, VAR10_12, VAR10_13, VAR10_14, VAR10_15, VAR10_16, VAR10_17),
-      function(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17) {
-        tech <- c()
-        if (isTRUE(v1 == 1)) tech <- c(tech, "iPad")
-        if (isTRUE(v2 == 1)) tech <- c(tech, "Smartphone")
-        if (isTRUE(v3 == 1)) tech <- c(tech, "BRS")
-        if (isTRUE(v4 == 1)) tech <- c(tech, "De-icing bil")
-        if (isTRUE(v5 == 1)) tech <- c(tech, "Bagagetransport")
-        if (isTRUE(v6 == 1)) tech <- c(tech, "Räddningsfordon")
-        if (isTRUE(v7 == 1)) tech <- c(tech, "Power Stow")
-        if (isTRUE(v8 == 1)) tech <- c(tech, "Lastband")
-        if (isTRUE(v9 == 1)) tech <- c(tech, "Tankbil")
-        if (isTRUE(v10 == 1)) tech <- c(tech, "Water/Waste")
-        if (isTRUE(v11 == 1)) tech <- c(tech, "Fingerscanner")
-        if (isTRUE(v12 == 1)) tech <- c(tech, "Lyfthjälpmedel")
-        if (isTRUE(v13 == 1)) tech <- c(tech, "Pushback")
-        if (isTRUE(v14 == 1)) tech <- c(tech, "Stationär eller bärbar dator")
-        if (isTRUE(v15 == 1)) tech <- c(tech, "Digitalisering (i allmänhet)")
-        if (isTRUE(v16 == 1)) tech <- c(tech, "Gater")
-        if (isTRUE(v17 == 1)) tech <- c(tech, "Inget ovanstående")
-        if (length(tech) == 0) NA_character_ else str_c(tech, collapse = ", ")
-      }
-    )
-  )
+RecodeTech(dataDF, dataDF$VAR10_1, dataDF$VAR10_2, dataDF$VAR10_3, dataDF$VAR10_4, dataDF$VAR10_5, 
+           dataDF$VAR10_6, dataDF$VAR10_7, dataDF$VAR10_8, dataDF$VAR10_9, dataDF$VAR10_10,
+           dataDF$VAR10_11, dataDF$VAR10_12, dataDF$VAR10_13, dataDF$VAR10_14, dataDF$VAR10_15, 
+           dataDF$VAR10_16, dataDF$VAR10_17)
 
 # VAR11 - Du kommer att få svara på frågor om hur du upplevde processen med att införa tekniska hjälpmedel, samt vilken roll du hade i införandet.
-dataDF <- dataDF %>%
-  mutate(
-    mark_tech = pmap_chr(
-      list(VAR11_1, VAR11_2, VAR11_3, VAR11_4, VAR11_5, VAR11_6, VAR11_7, VAR11_8, VAR11_9, VAR11_10, VAR11_11, VAR11_12, VAR11_13, VAR11_14, VAR11_15, VAR11_16, VAR11_17),
-      function(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17) {
-        tech <- c()
-        if (isTRUE(v1 == 1)) tech <- c(tech, "iPad")
-        if (isTRUE(v2 == 1)) tech <- c(tech, "Smartphone")
-        if (isTRUE(v3 == 1)) tech <- c(tech, "BRS")
-        if (isTRUE(v4 == 1)) tech <- c(tech, "De-icing bil")
-        if (isTRUE(v5 == 1)) tech <- c(tech, "Bagagetransport")
-        if (isTRUE(v6 == 1)) tech <- c(tech, "Räddningsfordon")
-        if (isTRUE(v7 == 1)) tech <- c(tech, "Power Stow")
-        if (isTRUE(v8 == 1)) tech <- c(tech, "Lastband")
-        if (isTRUE(v9 == 1)) tech <- c(tech, "Tankbil")
-        if (isTRUE(v10 == 1)) tech <- c(tech, "Water/Waste")
-        if (isTRUE(v11 == 1)) tech <- c(tech, "Fingerscanner")
-        if (isTRUE(v12 == 1)) tech <- c(tech, "Lyfthjälpmedel")
-        if (isTRUE(v13 == 1)) tech <- c(tech, "Pushback")
-        if (isTRUE(v14 == 1)) tech <- c(tech, "Stationär eller bärbar dator")
-        if (isTRUE(v15 == 1)) tech <- c(tech, "Digitalisering (i allmänhet)")
-        if (isTRUE(v16 == 1)) tech <- c(tech, "Gater")
-        if (isTRUE(v17 == 1)) tech <- c(tech, "Inget ovanstående")
-        if (length(tech) == 0) NA_character_ else str_c(tech, collapse = ", ")
-      }
-    )
-  )
+RecodeTech(dataDF, dataDF$VAR11_1, dataDF$VAR11_2, dataDF$VAR11_3, dataDF$VAR11_4, dataDF$VAR11_5, 
+           dataDF$VAR11_6, dataDF$VAR11_7, dataDF$VAR11_8, dataDF$VAR11_9, dataDF$VAR11_10,
+           dataDF$VAR11_11, dataDF$VAR11_12, dataDF$VAR11_13, dataDF$VAR11_14, dataDF$VAR11_15, 
+           dataDF$VAR11_16, dataDF$VAR11_17)
+
 
 
 # VAR12_ - Hur ofta använder du de tekniska hjälpmedlen?
