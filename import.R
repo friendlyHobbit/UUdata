@@ -10,7 +10,6 @@ library(viridis)
 dataDir <- getwd()
 dataDF <- read.csv(file.path(dataDir, "data\\SurveyData2025-12-08.csv"), sep = ";")
 
-#metaDataDF <- read.csv(file.path(dataDir, "data\\testdata_meta.csv"), sep = ",")
 
 
 #------------- Restructucture data -------------------
@@ -113,52 +112,40 @@ dataDF <- dataDF %>%
   ))
 
 # function to recode tech
-RecodeTech <- function(df, var1, var2, var3, var4, var5, var6, var7, var8, var9, var10, var11, var12, var13, var14, var15, var16, var17) { 
-  df <- df |>
-    mutate(
-      var1 = recode(var1, `1` = "iPad", `2` = NULL, .default = NULL),
-      var2 = recode(var2, `1` = "Smartphone", `2` = NULL, .default = NULL),
-      var3 = recode(var3, `1` = "BRS", `2` = NULL, .default = NULL),
-      var4 = recode(var4, `1` = "De-icing bil", `2` = NULL, .default = NULL),
-      var5 = recode(var5, `1` = "Bagagetransport", `2` = NULL, .default = NULL),
-      var6 = recode(var6, `1` = "Räddningsfordon", `2` = NULL, .default = NULL),
-      var7 = recode(var7, `1` = "Power Stow", `2` = NULL, .default = NULL),
-      var8 = recode(var8, `1` = "Lastband", `2` = NULL, .default = NULL),
-      var9 = recode(var9, `1` = "Tankbil", `2` = NULL, .default = NULL),
-      var10 = recode(var10, `1` = "Water/Waste", `2` = NULL, .default = NULL),
-      var11 = recode(var11, `1` = "Fingerscanner", `2` = NULL, .default = NULL),
-      var12 = recode(var12, `1` = "Lyfthjälpmedel", `2` = NULL, .default = NULL),
-      var13 = recode(var13, `1` = "Pushback", `2` = NULL, .default = NULL),
-      var14 = recode(var14, `1` = "Stationär eller bärbar dator", `2` = NULL, .default = NULL),
-      var15 = recode(var15, `1` = "Digitalisering (i allmänhet)", `2` = NULL, .default = NULL),
-      var16 = recode(var16, `1` = "Gater", `2` = NULL, .default = NULL),
-      var17 = recode(var17, `1` = "Inget ovanstående", `2` = NULL, .default = NULL),
-    )  
+RecodeMulti <- function(df, prefix, labels) {
+  cols <- grep(paste0("^", prefix, "_\\d+$"), names(df), value = TRUE)
+  df %>%
+    mutate(across(
+      all_of(cols),
+      ~ {
+        idx <- as.numeric(sub(paste0(prefix, "_"), "", cur_column()))
+        recode(.x,
+               `1` = labels[idx],
+               `2` = NULL,
+               .default = NULL)
+      }
+    ))
 }
 
+labels_shared <- c(
+  "iPad", "Smartphone", "BRS", "De-icing bil", "Bagagetransport",
+  "Räddningsfordon", "Power Stow", "Lastband", "Tankbil", "Water/Waste",
+  "Fingerscanner", "Lyfthjälpmedel", "Pushback",
+  "Stationär eller bärbar dator", "Digitalisering (i allmänhet)",
+  "Gater", "Inget ovanstående"
+)
+
 # recode VAR08 - Vilka av följande tekniska hjälpmedel finns tillgängliga i din arbetsroll på den flygplats där du arbetar?
-RecodeTech(dataDF, dataDF$VAR08_1, dataDF$VAR08_2, dataDF$VAR08_3, dataDF$VAR08_4, dataDF$VAR08_5, 
-           dataDF$VAR08_6, dataDF$VAR08_7, dataDF$VAR08_8, dataDF$VAR08_9, dataDF$VAR08_10,
-           dataDF$VAR08_11, dataDF$VAR08_12, dataDF$VAR08_13, dataDF$VAR08_14, dataDF$VAR08_15, 
-           dataDF$VAR08_16, dataDF$VAR08_17)
+dataDF <- RecodeMulti(dataDF, "VAR08", labels_shared)
 
 # VAR09 - Vilka av följande tekniska hjälpmedel finns tillgängliga för markpersonalen på flygplatsen där du arbetar?
-RecodeTech(dataDF, dataDF$VAR09_1, dataDF$VAR09_2, dataDF$VAR09_3, dataDF$VAR09_4, dataDF$VAR09_5, 
-           dataDF$VAR09_6, dataDF$VAR09_7, dataDF$VAR09_8, dataDF$VAR09_9, dataDF$VAR09_10,
-           dataDF$VAR09_11, dataDF$VAR09_12, dataDF$VAR09_13, dataDF$VAR09_14, dataDF$VAR09_15, 
-           dataDF$VAR09_16, dataDF$VAR09_17)
+dataDF <- RecodeMulti(dataDF, "VAR09", labels_shared)
 
 # VAR10 - Välj max två tekniska hjälpmedel som du anser har betydelse för arbetsmiljön i ditt arbete.
-RecodeTech(dataDF, dataDF$VAR10_1, dataDF$VAR10_2, dataDF$VAR10_3, dataDF$VAR10_4, dataDF$VAR10_5, 
-           dataDF$VAR10_6, dataDF$VAR10_7, dataDF$VAR10_8, dataDF$VAR10_9, dataDF$VAR10_10,
-           dataDF$VAR10_11, dataDF$VAR10_12, dataDF$VAR10_13, dataDF$VAR10_14, dataDF$VAR10_15, 
-           dataDF$VAR10_16, dataDF$VAR10_17)
+dataDF <- RecodeMulti(dataDF, "VAR10", labels_shared)
 
 # VAR11 - Du kommer att få svara på frågor om hur du upplevde processen med att införa tekniska hjälpmedel, samt vilken roll du hade i införandet.
-RecodeTech(dataDF, dataDF$VAR11_1, dataDF$VAR11_2, dataDF$VAR11_3, dataDF$VAR11_4, dataDF$VAR11_5, 
-           dataDF$VAR11_6, dataDF$VAR11_7, dataDF$VAR11_8, dataDF$VAR11_9, dataDF$VAR11_10,
-           dataDF$VAR11_11, dataDF$VAR11_12, dataDF$VAR11_13, dataDF$VAR11_14, dataDF$VAR11_15, 
-           dataDF$VAR11_16, dataDF$VAR11_17)
+dataDF <- RecodeMulti(dataDF, "VAR11", labels_shared)
 
 
 
@@ -230,115 +217,6 @@ df_tlx %>%
 
 
 
-
-# change var names of VAR19_X to sun (Tekniken blir svårare att använda i starkt solsken.)
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR19_", "sun_", .x), matches("VAR19_"))
-
-# change var names of VAR20_X to snow (Tekniken blir svårare att använda i snö.)
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR20_", "snow_", .x), matches("VAR20_"))
-
-# change var names of VAR21_X to cold (Tekniken blir svårare att använda i kyla.)
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR21_", "cold_", .x), matches("VAR21_"))
-
-# change var names of VAR22_X to rain (Tekniken blir svårare att använda i regn.)
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR22_", "rain_", .x), matches("VAR22_"))
-
-# change var names of VAR23_X to dark (Tekniken blir svårare att använda i mörker.)
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR23_", "dark_", .x), matches("VAR23_"))
-
-# change var names of VAR24_X to mist (Tekniken blir svårare att använda i dimma.)
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR24_", "mist_", .x), matches("VAR24_"))
-
-
-# VAR25_x - I vilken utsträckning har du medverkat i arbetet att införa det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR25_", "introduce_", .x), matches("VAR25_"))
-
-# VAR26_x - I vilken utsträckning har du medverkat i att utveckla hur ni jobbar med det tekniska hjälpmedlet? 
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR26_", "develop_", .x), matches("VAR26_"))
-
-# VAR27_x - I vilken utsträckning har du fått möjlighet att medverka i införandet av det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR27_", "possibility_introduce_", .x), matches("VAR27_"))
-
-# VAR28_x - I vilken utsträckning har du fått möjlighet att medverka i att utveckla hur ni jobbar med det tekniska hjälpmedlet? 
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR28_", "possibility_develop_", .x), matches("VAR28_"))
-
-# VAR29_x - I vilken grad upplever du att dina synpunkter har påverkat införandet av det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR29_", "opinion_introduce_", .x), matches("VAR29_"))
-
-# VAR30_x -  I vilken grad upplever du att dina synpunkter har påverkat utvecklingen av hur ni jobbar med det tekniska hjälpmedlet? 
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR30_", "opinion_develop_", .x), matches("VAR30_"))
-
-# VAR31 - I vilken grad upplever du att arbetsmiljön varit i fokus vid införandet av det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR31_", "environment_introduce_", .x), matches("VAR31_"))
-
-# VAR32 - I vilken grad genomfördes en riskanalys innan det tekniska hjälpmedlet infördes?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR32_", "risk_analysis_", .x), matches("VAR32_"))
-
-# VAR33 - I vilken utsträckning har dina kollegor i markpersonalen medverkat i utvecklingsarbetet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR33_", "staff_involvement_", .x), matches("VAR33_"))
-
-# VAR34 -  I vilken grad vet du hur du ska gå till väga om du har synpunkter om förbättringar som gäller arbetet med det tekniska hjälpmedlet? 
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR34_", "feedback_", .x), matches("VAR34_"))
-
-# VAR35 - I vilken grad upplever du att det har varit tydligt varför det tekniska hjälpmedlet har införts?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR35_", "clearity_", .x), matches("VAR35_"))
-
-# VAR36 - I vilken utsträckning har du medverkat i arbetet att införa det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR36_", "participated_", .x), matches("VAR36_"))
-
-# VAR37 -  I vilken utsträckning har du medverkat i att utveckla hur berörd markpersonal jobbar med det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR37_", "participated_staff_", .x), matches("VAR37_"))
-
-# VAR38 - I vilken utsträckning har berörd markpersonal fått möjlighet att medverka i införandet av det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR38_", "opportunity_introduction_", .x), matches("VAR38_"))
-
-# VAR39 -  I vilken utsträckning har berörd markpersonal fått möjlighet att medverka i att utveckla hur de jobbar med det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR39_", "opportunity_development_", .x), matches("VAR39_"))
-
-# VAR40 - I vilken grad upplever du att dina synpunkter har påverkat införandet av det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR40_", "opinion_introduce2_", .x), matches("VAR40_"))
-
-# VAR41 - I vilken grad upplever du att dina synpunkter har påverkat utvecklingen av hur berörd markpersonal jobbar med det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR41_", "opinion_develop2_", .x), matches("VAR41_"))
-
-# VAR42 - I vilken grad har arbetsmiljö varit ett fokus när det tekniska hjälpmedlet har införts?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR42_", "environment_introduce2_", .x), matches("VAR42_"))
-
-# VAR43 - I vilken grad genomfördes en riskanalys innan det tekniska hjälpmedlet infördes? 
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR43_", "risk_analysis2_", .x), matches("VAR43_"))
-
-# VAR44 - I vilken utsträckning har dina chefskollegor medverkat i utvecklingsarbetet gällande det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR44_", "chef_development_", .x), matches("VAR44_"))
-
-# VAR45 - I vilken grad har berörd markpersonal fått möjlighet att framföra synpunkter om förbättringar som gäller arbetet med det tekniska hjälpmedlet?
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR45_", "chef_feedback_", .x), matches("VAR45_"))
 
 
 
