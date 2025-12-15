@@ -15,24 +15,20 @@ dataDF <- read.csv(file.path(dataDir, "data\\Long_SurveyData2025-12-08.csv"), se
 dataDF <- dataDF %>% mutate_if(is.character, as.factor)
 dataDF$ID <- as.factor(dataDF$ID)
 
-
+summary(dataDF$ID)
 
 
 ########### Initial analysis #################
 
-data_unique <- dataDF %>%
-  distinct(ID, .keep_all = TRUE)
-
-
 # get people's roles
-summary(data_unique$VAR00.x)
+summary(dataDF$VAR00)
 
 # Compute counts per role, unique ID
-role_counts <- data_unique %>%
-  count(VAR00.x)
+role_counts <- dataDF %>%
+  count(VAR00)
 
 # Plot
-ggplot(role_counts, aes(x="", y=n, fill=VAR00.x)) +
+ggplot(role_counts, aes(x="", y=n, fill=VAR00)) +
   geom_bar(stat="identity", width=1, color="white", linewidth=.5) +
   coord_polar(theta="y", start=1) +
   labs(title = "managers vs ground staff", fill = "Roles") +
@@ -41,57 +37,25 @@ ggplot(role_counts, aes(x="", y=n, fill=VAR00.x)) +
   scale_fill_brewer(palette="Set1") +
   theme( plot.title = element_text(hjust = 0.5))
 
-
-# ground roles
-summary(data_unique$VAR01)
-
-# Plot
-data_unique %>% 
-  filter(!is.na(VAR01)) %>% 
-  ggplot(aes(x = VAR01, fill = VAR01)) +
-  geom_bar() +
-  geom_text(stat = "count", aes(label = after_stat(count)),
-            vjust = -0.3, size = 4) +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Ground staff roles", x = "", y = "Count")
-
-
-
-# boss roles
-summary(data_unique$VAR02)
-
-# Plot
-data_unique %>% 
-  filter(!is.na(VAR02)) %>% 
-  ggplot(aes(x = VAR02, fill = VAR02)) +
-  geom_bar() +
-  geom_text(stat = "count", aes(label = after_stat(count)),
-            vjust = -0.3, size = 4) +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Manager roles", x = "", y = "Count")
-
-
-
 # age
-summary(data_unique$VAR03)
+summary(dataDF$VAR03)
 
-ggplot(data_unique, aes(x = VAR03, fill = VAR03)) +
-  geom_bar() +
+ggplot(dataDF, aes(x = VAR03, fill = VAR03)) +
+  geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
     x = "Age",
     y = "count"
   ) +
+  theme_minimal() +
   theme(legend.position = "none") +
   theme(plot.title = element_text(hjust = 0.5))
 
 
 # gender
-summary(data_unique$VAR04)
+summary(dataDF$VAR04)
 
-ggplot(data_unique, aes(x = VAR04)) +
+ggplot(dataDF, aes(x = VAR04)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
@@ -99,15 +63,13 @@ ggplot(data_unique, aes(x = VAR04)) +
     y = "count"
   ) +
   theme_minimal() +
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
+  theme(plot.title = element_text(hjust = 0.5))
 
 
 # airport size
-summary(data_unique$VAR05)
+summary(dataDF$VAR05)
 
-ggplot(data_unique, aes(x = VAR05)) +
+ggplot(dataDF, aes(x = VAR05)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
@@ -121,9 +83,9 @@ ggplot(data_unique, aes(x = VAR05)) +
 
 
 # time at airport
-summary(data_unique$VAR06)
+summary(dataDF$VAR06)
 
-ggplot(data_unique, aes(x = VAR06)) +
+ggplot(dataDF, aes(x = VAR06)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
@@ -131,14 +93,12 @@ ggplot(data_unique, aes(x = VAR06)) +
     y = "count"
   ) +
   theme_minimal() +
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
+  theme(plot.title = element_text(hjust = 0.5))
 
 # time at airports generally
-summary(data_unique$VAR07)
+summary(dataDF$VAR07)
 
-ggplot(data_unique, aes(x = VAR07)) +
+ggplot(dataDF, aes(x = VAR07)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
@@ -151,4 +111,74 @@ ggplot(data_unique, aes(x = VAR07)) +
   )
 
 
-# available tech
+########### Subset roles ###################
+
+RoleDF <- subset(dataDF, select = ID:VAR02_6)
+RoleDF<-subset(RoleDF, select = -c(VAR01_6))
+
+RoleDF <- RoleDF %>%
+  pivot_longer(
+    cols = matches("VAR01_|VAR02_"),
+    names_to = c(".value", "type"),
+    names_pattern = "(VAR\\d{2})_(\\d+)",
+    values_drop_na = TRUE
+  )
+RoleDF<-subset(RoleDF, select = -c(type))
+
+summary(RoleDF)
+
+# number of roles people have
+summary(RoleDF$ID)
+
+# chef roles
+ggplot(data=subset(RoleDF, !is.na(VAR02)), aes(x = VAR02)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    x = "Manager roles",
+    y = "count"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+# ground staff roles
+ggplot(data=subset(RoleDF, !is.na(VAR01)), aes(x = VAR01)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    x = "Ground staff roles",
+    y = "count"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+
+
+
+########### Tech #############
+
+# turn to long df
+toLongDF <- function(df, var){
+  sub_df <- df %>% select(matches(var), ID)
+  # trn to long
+  long_df <- sub_df %>%
+    pivot_longer(
+      cols = matches(var),
+      values_to = var,
+      values_drop_na = TRUE
+    )
+  # drop names column
+  long_df <- subset(long_df, select= -c(name))
+  return(long_df)
+}
+
+VAR08_DF <- toLongDF(dataDF, "VAR08")
+VAR09_DF <- toLongDF(dataDF, "VAR09")
+VAR10_DF <- toLongDF(dataDF, "VAR10")
+VAR11_DF <- toLongDF(dataDF, "VAR11")
+
+

@@ -31,31 +31,30 @@ dataDF <- dataDF |>
     VAR02_4 = recode(VAR02_4, `1` = "Arbetsmiljöansvarig", `2` = NULL, .default = NULL),
     VAR02_5 = recode(VAR02_5, `1` = "Skyddsombud/facklig", `2` = NULL, .default = NULL),
     VAR02_6 = recode(VAR02_6, `1` = "Annat", `2` = NULL, .default = NULL),
+    VAR01_6 = na_if(VAR01_6, ""),
+    VAR02_7 = na_if(VAR02_7, "")
   )
 
-# these need fixing, something goes wrong
-dataDF$VAR01_6 <- ifelse(dataDF$VAR01_6=="", dataDF$VAR01_6<-NA, dataDF$VAR01_6<-dataDF$VAR01_6)
-dataDF$VAR02_7 <- ifelse(dataDF$VAR02_7=="", dataDF$VAR02_7<-NA, dataDF$VAR02_7<-dataDF$VAR02_7)
 
 #subset
-RoleDF <- subset(dataDF, select = ID:VAR02_7)
+#RoleDF <- subset(dataDF, select = ID:VAR02_7)
 
-longDF <- RoleDF %>%
-  pivot_longer(
-    cols = matches("VAR01_|VAR02_"),
-    names_to = c(".value", "type"),
-    names_pattern = "(VAR\\d{2})_(\\d+)",
-    values_drop_na = TRUE
-  )
-longDF<-subset(longDF, select = -c(type))
+#longDF <- RoleDF %>%
+#  pivot_longer(
+#    cols = matches("VAR01_|VAR02_"),
+#    names_to = c(".value", "type"),
+#    names_pattern = "(VAR\\d{2})_(\\d+)",
+#    values_drop_na = TRUE
+#  )
+#longDF<-subset(longDF, select = -c(type))
 
-longDF$VAR01_VAR02 <- longDF$VAR01 
-longDF$VAR01_VAR02 <- ifelse(!is.na(longDF$VAR01_VAR02), longDF$VAR01_VAR02<-longDF$VAR01_VAR02, longDF$VAR01_VAR02<-longDF$VAR02)
+#longDF$VAR01_VAR02 <- longDF$VAR01 
+#longDF$VAR01_VAR02 <- ifelse(!is.na(longDF$VAR01_VAR02), longDF$VAR01_VAR02<-longDF$VAR01_VAR02, longDF$VAR01_VAR02<-longDF$VAR02)
 
 # merge longDF back into dataDF
-dataDF <- subset(dataDF, select=-c(VAR01_1, VAR01_2,VAR01_3, VAR01_4, VAR01_5, VAR02_1, VAR02_2, VAR02_3, VAR02_4, VAR02_5, VAR02_6))
-PH_DF <- merge(dataDF, longDF, by = "ID")
-dataDF <- PH_DF
+#dataDF <- subset(dataDF, select=-c(VAR01_1, VAR01_2,VAR01_3, VAR01_4, VAR01_5, VAR02_1, VAR02_2, VAR02_3, VAR02_4, VAR02_5, VAR02_6))
+#PH_DF <- merge(dataDF, longDF, by = "ID")
+#dataDF <- PH_DF
 
 
 
@@ -214,24 +213,24 @@ toLongDF <- function(df, var){
   return(long_df)
 }
 
-VAR08_DF <- toLongDF(dataDF, "VAR08")
-VAR09_DF <- toLongDF(dataDF, "VAR09")
-VAR10_DF <- toLongDF(dataDF, "VAR10")
-VAR11_DF <- toLongDF(dataDF, "VAR11")
+#VAR08_DF <- toLongDF(dataDF, "VAR08")
+#VAR09_DF <- toLongDF(dataDF, "VAR09")
+#VAR10_DF <- toLongDF(dataDF, "VAR10")
+#VAR11_DF <- toLongDF(dataDF, "VAR11")
 
 # merge back into dataDF
-dataDF <- dataDF %>% select(-contains("VAR08"), -contains("VAR09"), -contains("VAR10"), -contains("VAR11"))
+#dataDF <- dataDF %>% select(-contains("VAR08"), -contains("VAR09"), -contains("VAR10"), -contains("VAR11"))
 
-dataDF2 <- merge(dataDF, VAR08_DF, by = "ID", all = TRUE)
-dataDF3 <- merge(dataDF2, VAR09_DF, by = "ID", all = TRUE)
-dataDF4 <- merge(dataDF3, VAR10_DF, by = "ID", all = TRUE)
-dataDF5 <- merge(dataDF4, VAR11_DF, by = "ID", all = TRUE)
+#dataDF2 <- merge(dataDF, VAR08_DF, by = "ID", all = TRUE)
+#dataDF3 <- merge(dataDF2, VAR09_DF, by = "ID", all = TRUE)
+#dataDF4 <- merge(dataDF3, VAR10_DF, by = "ID", all = TRUE)
+#dataDF5 <- merge(dataDF4, VAR11_DF, by = "ID", all = TRUE)
 
 
 
 ############ Export DF ###################
 
-write.csv(dataDF5, file.path(dataDir, "data\\Long_SurveyData2025-12-08.csv"))
+write.csv(dataDF, file.path(dataDir, "data\\Long_SurveyData2025-12-08.csv"))
 
 
 
