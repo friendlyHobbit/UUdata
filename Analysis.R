@@ -28,14 +28,17 @@ role_counts <- dataDF %>%
   count(VAR00)
 
 # Plot
-ggplot(role_counts, aes(x="", y=n, fill=VAR00)) +
-  geom_bar(stat="identity", width=1, color="white", linewidth=.5) +
-  coord_polar(theta="y", start=1) +
-  labs(title = "managers vs ground staff", fill = "Roles") +
-  theme_void()  +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5)) +
-  scale_fill_brewer(palette="Set1") +
-  theme( plot.title = element_text(hjust = 0.5))
+ggplot(dataDF, aes(x = VAR00, fill = VAR04)) +
+  geom_bar() +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs( title = "managers vs ground staff",
+    x = "Roles",
+    y = "count",
+    fill = "Gender"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
 
 # age
 summary(dataDF$VAR03)
