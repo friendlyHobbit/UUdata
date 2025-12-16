@@ -114,7 +114,6 @@ dataDF <- dataDF %>%
 
 # VAR12_ - Hur ofta använder du de tekniska hjälpmedlen?
 dataDF <- dataDF %>%
-  rename_with(~ sub("VAR12_", "useFrequency_", .x), matches("VAR12_")) %>%
   mutate(across(starts_with("useFrequency_"), ~ case_when(
     .x == 1 ~ "Aldrig",
     .x == 2 ~ "Mindre än varje månad",
@@ -130,33 +129,23 @@ dataDF <- dataDF %>%
 ################## NASA TLX ###############
 
 # VAR13 - mental
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR13_", "TLX_Mental_", .x), matches("VAR13_"))
+#dataDF <- dataDF %>%
+#  rename_with(~ sub("VAR13_", "TLX_Mental_", .x), matches("VAR13_"))
 # VAR14 - fysical
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR14_", "TLX_Physical_", .x), matches("VAR14_"))
+#dataDF <- dataDF %>%
+#  rename_with(~ sub("VAR14_", "TLX_Physical_", .x), matches("VAR14_"))
 # VAR15 - Temporal Demand 
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR15_", "TLX_Temporal_", .x), matches("VAR15_"))
+#dataDF <- dataDF %>%
+#  rename_with(~ sub("VAR15_", "TLX_Temporal_", .x), matches("VAR15_"))
 # VAR16 - Performance
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR16_", "TLX_Performance_", .x), matches("VAR16_"))
+#dataDF <- dataDF %>%
+#  rename_with(~ sub("VAR16_", "TLX_Performance_", .x), matches("VAR16_"))
 # VAR17 - Effort
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR17_", "TLX_Effort_", .x), matches("VAR17_"))
+#dataDF <- dataDF %>%
+#  rename_with(~ sub("VAR17_", "TLX_Effort_", .x), matches("VAR17_"))
 # VAR18 - Frustration
-dataDF <- dataDF %>%
-  rename_with(~ sub("VAR18_", "TLX_Frustration_", .x), matches("VAR18_"))
-# Nasa-TLX total
-for (i in 1:16) {
-  dataDF[[paste0("TLX_Sum_", i)]] <-
-    dataDF[[paste0("TLX_Frustration_", i)]] +
-    dataDF[[paste0("TLX_Effort_", i)]] +
-    dataDF[[paste0("TLX_Performance_", i)]] +
-    dataDF[[paste0("TLX_Temporal_", i)]] +
-    dataDF[[paste0("TLX_Physical_", i)]] +
-    dataDF[[paste0("TLX_Mental_", i)]] 
-}
+#dataDF <- dataDF %>%
+#  rename_with(~ sub("VAR18_", "TLX_Frustration_", .x), matches("VAR18_"))
 
 
 ############## Tech ######################

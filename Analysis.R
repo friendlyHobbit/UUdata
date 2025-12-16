@@ -175,7 +175,7 @@ toLongDF <- function(df, var){
       values_drop_na = TRUE
     )
   # drop names column
-  long_df <- subset(long_df, select= -c(name))
+  #long_df <- subset(long_df, select= -c(name))
   return(long_df)
 }
 
@@ -183,5 +183,137 @@ VAR08_DF <- toLongDF(dataDF, "VAR08")
 VAR09_DF <- toLongDF(dataDF, "VAR09")
 VAR10_DF <- toLongDF(dataDF, "VAR10")
 VAR11_DF <- toLongDF(dataDF, "VAR11")
+
+
+# VAR08_DF - Vilka tekniska hjälpmedel i denna lista har ni på flygplatsen där du arbetar och som finns tillgänglig i din arbetsroll?
+ggplot(VAR08_DF, aes(x = VAR08)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    #x = "VAR08",
+    y = "count",
+    title = "Vilka tekniska hjälpmedel i denna lista har ni på flygplatsen där du arbetar och som finns tillgänglig i din arbetsroll?"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+# VAR09_DF - Vilka tekniska hjälpmedel i denna lista har ni på flygplatsen?   
+ggplot(VAR09_DF, aes(x = VAR09)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    #x = "VAR09",
+    y = "count",
+    title = "Vilka tekniska hjälpmedel i denna lista har ni på flygplatsen?",
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+# VAR10_DF - välj minst två tekniska hjälpmedel som du anser ha koppling till arbetsmiljön i ditt arbete. Det kan vara teknik som blir svårare att använda under specifika väderförhållanden, teknik som finns tillgänglig men inte används, ett hjälpmedel som har orsakat stora problem i ditt arbete, eller något annat som du tycker är viktigt.
+ggplot(VAR10_DF, aes(x = VAR10)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    #x = "VAR10",
+    y = "count",
+    title = "Välj minst två tekniska hjälpmedel som du anser ha koppling till arbetsmiljön i ditt arbete."
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+# VAR11_DF - Du kommer att få svara på frågor om hur du upplevde processen med att införa tekniska hjälpmedel, samt vilken roll du hade i införandet. Välj minst två tekniska hjälpmedel som du anser vara mest relevant kopplat till arbetsmiljön i arbetet för markpersonalen.
+ggplot(VAR11_DF, aes(x = VAR11)) +
+  geom_bar(fill = "#0072B2") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
+  labs(
+    #x = "VAR11",
+    y = "count",
+    title = " Välj minst två tekniska hjälpmedel som du anser vara mest relevant kopplat till arbetsmiljön i arbetet för markpersonalen."
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+# Numerical data - tech
+
+# usage
+summary(dataDF$VAR11_2)
+VAR11_DF <- toLongDF(dataDF, "VAR11")
+
+
+############## NASA TLX ##################
+
+labels_tech <- c(
+  "iPad", "Smartphone", "BRS", "De-icing bil", "Bagagetransport",
+  "Räddningsfordon", "Power Stow", "Lastband", "Tankbil",
+  "Water/Waste", "Fingerscanner", "Lyfthjälpmedel", "Pushback",
+  "Stationär eller bärbar dator", "Digitalisering (i allmänhet)",
+  "Gater", "Inget ovanstående"
+)
+
+RecodeTech <- function(df, prefix, col = "name") {
+  df %>%
+    mutate(
+      !!col := {
+        idx <- as.numeric(sub(paste0(prefix, "_"), "", .data[[col]]))
+        factor(labels_tech[idx], levels = labels_tech)
+      }
+    )
+}
+
+
+# tlx VAR12
+VAR12_DF <- toLongDF(dataDF, "VAR12")
+VAR12_DF <- RecodeTech(VAR12_DF, "VAR12")
+
+# tlx VAR13
+VAR13_DF <- toLongDF(dataDF, "VAR13")
+VAR13_DF <- RecodeTech(VAR13_DF, "VAR13")
+
+#tlx VAR14
+summary(dataDF$VAR14_1)
+VAR14_DF <- toLongDF(dataDF, "VAR14")
+VAR14_DF <- RecodeTech(VAR14_DF, "VAR14")
+
+# tlx VAR15
+summary(dataDF$VAR15_1)
+VAR15_DF <- toLongDF(dataDF, "VAR15")
+VAR15_DF <- RecodeTech(VAR15_DF, "VAR15")
+
+# tlx VAR16 - reversed
+summary(dataDF$VAR16_1)
+VAR16_DF <- toLongDF(dataDF, "VAR16")
+VAR16_DF <- RecodeTech(VAR16_DF, "VAR16")
+
+# tlx VAR17
+summary(dataDF$VAR17_1)
+VAR17_DF <- toLongDF(dataDF, "VAR17")
+VAR17_DF <- RecodeTech(VAR17_DF, "VAR17")
+
+# tlx VAR18
+summary(dataDF$VAR18_1)
+VAR18_DF <- toLongDF(dataDF, "VAR18")
+VAR18_DF <- RecodeTech(VAR18_DF, "VAR18")
+
+# NASA-TLX
+MergeDF1 <- merge(VAR18_DF, VAR17_DF, by = c("ID", "name"))
+MergeDF2 <- merge(VAR16_DF, VAR15_DF, by = c("ID", "name"))
+MergeDF3 <- merge(VAR14_DF, VAR13_DF, by = c("ID", "name"))
+MargeDF4 <- merge(MergeDF1, MergeDF2, by = c("ID", "name"))
+NASA_TLX_DF <- merge(MargeDF4, MergeDF3, by = c("ID", "name"))
+
+# recode VAR16
+NASA_TLX_DF$VAR16_reverse <- 6 - NASA_TLX_DF$VAR16
 
 
