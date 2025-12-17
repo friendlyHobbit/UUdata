@@ -186,6 +186,7 @@ VAR11_DF <- toLongDF(dataDF, "VAR11")
 
 
 # VAR08_DF - Vilka tekniska hjälpmedel i denna lista har ni på flygplatsen där du arbetar och som finns tillgänglig i din arbetsroll?
+# add airport size
 ggplot(VAR08_DF, aes(x = VAR08)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
@@ -399,3 +400,23 @@ ggplot(NASA_TLX_DF, aes(name, total)) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
+
+
+
+############# Weather ##########################
+
+VAR19_DF <- toLongDF(dataDF, "VAR19")
+VAR20_DF <- toLongDF(dataDF, "VAR20")
+VAR21_DF <- toLongDF(dataDF, "VAR21")
+VAR22_DF <- toLongDF(dataDF, "VAR22")
+VAR23_DF <- toLongDF(dataDF, "VAR23")
+VAR24_DF <- toLongDF(dataDF, "VAR24")
+
+
+########### Involvement #####################
+
+VAR25_DF <- toLongDF(dataDF, "VAR25")
+VAR26_DF <- toLongDF(dataDF, "VAR26")
+VAR27_DF <- toLongDF(dataDF, "VAR27")
+VAR28_DF <- toLongDF(dataDF, "VAR28")
+VAR29_DF <- toLongDF(dataDF, "VAR29")
