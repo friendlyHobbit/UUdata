@@ -316,4 +316,86 @@ NASA_TLX_DF <- merge(MargeDF4, MergeDF3, by = c("ID", "name"))
 # recode VAR16
 NASA_TLX_DF$VAR16_reverse <- 6 - NASA_TLX_DF$VAR16
 
+# total NASA score
+NASA_TLX_DF$total <- rowSums(NASA_TLX_DF[, c("VAR16_reverse", "VAR18", "VAR17", "VAR15", "VAR14", "VAR13")])
 
+summary(NASA_TLX_DF)
+
+
+# VAR13
+ggplot(NASA_TLX_DF, aes(x=VAR13, fill=name)) + 
+  geom_histogram(position = 'dodge', binwidth = 0.5, center=TRUE) +
+  labs(
+    x = "Mental belastning",
+    y = "Count",
+    title = "Hur mentalt ansträngande är det att använda de tekniska hjälpmedlen i ditt arbete?"
+  ) 
+
+# VAR14
+ggplot(NASA_TLX_DF, aes(x=VAR14)) + 
+  facet_wrap(~name) +
+  geom_histogram(binwidth = 0.5, center=TRUE) +
+  labs(
+    x = "Fysisk belastning",
+    y = "Count",
+    title = "Hur fysiskt ansträngande är det att använda de tekniska hjälpmedlen i ditt arbete?"
+  ) 
+
+# VAR15
+ggplot(NASA_TLX_DF, aes(x=VAR15)) + 
+  geom_histogram() +
+  labs(
+    x = "Tidsmässig belastning",
+    y = "Count",
+    title = "Hur fysiskt ansträngande är det att använda de tekniska hjälpmedlen i ditt arbete?"
+  ) 
+
+# VAR16
+ggplot(NASA_TLX_DF, aes(x=VAR16)) + 
+  geom_histogram() +
+  labs(
+    x = "Prestation",
+    y = "Count",
+    title = "Hur framgångsrikt kan du genomföra dina arbetsuppgifter när du använder de tekniska hjälpmedlen?"
+  ) 
+
+# VAR17
+ggplot(NASA_TLX_DF, aes(x=VAR17)) + 
+  geom_histogram() +
+  labs(
+    x = "Ansträngning",
+    y = "Count",
+    title = "Hur ansträngande är det att använda de tekniska hjälpmedlen effektivt?"
+  ) 
+
+# VAR18
+ggplot(NASA_TLX_DF, aes(x=VAR18)) + 
+  geom_histogram() +
+  labs(
+    x = "Frustration",
+    y = "Count",
+    title = "Hur osäker, nedslagen, stressad eller irriterad känner du dig vid användning av de tekniska hjälpmedlen?"
+  ) 
+
+
+# plot total nasa tlx
+ggplot(NASA_TLX_DF, aes(name, total)) +
+  geom_jitter(width = 0.15) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+ggplot(NASA_TLX_DF, aes(name, total)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.2) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+ggplot(NASA_TLX_DF, aes(name, total)) +
+  geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) +
+  geom_jitter(width = 0.2) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
