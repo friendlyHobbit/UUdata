@@ -246,13 +246,6 @@ ggplot(VAR11_DF, aes(x = VAR11)) +
   )
 
 
-# Numerical data - tech
-
-# usage
-summary(dataDF$VAR11_2)
-VAR11_DF <- toLongDF(dataDF, "VAR11")
-
-
 ############## NASA TLX ##################
 
 labels_tech <- c(
@@ -405,18 +398,189 @@ ggplot(NASA_TLX_DF, aes(name, total)) +
 
 ############# Weather ##########################
 
+# Den valda tekniken blir en större belastning att använda under: Starkt solsken. 
 VAR19_DF <- toLongDF(dataDF, "VAR19")
+VAR19_DF <- RecodeTech(VAR19_DF, "VAR19")
+VAR19_DF$VAR19 <- as.factor(VAR19_DF$VAR19)
+summary(VAR19_DF)
+
+ggplot(VAR19_DF, aes(x = VAR19)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Starkt solsken"
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Snö.
 VAR20_DF <- toLongDF(dataDF, "VAR20")
+VAR20_DF <- RecodeTech(VAR20_DF, "VAR20")
+VAR20_DF$VAR20 <- as.factor(VAR20_DF$VAR20)
+
+ggplot(VAR20_DF, aes(x = VAR20)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Snö."
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Kyla
 VAR21_DF <- toLongDF(dataDF, "VAR21")
+VAR21_DF <- RecodeTech(VAR21_DF, "VAR21")
+VAR21_DF$VAR21 <- as.factor(VAR21_DF$VAR21)
+
+ggplot(VAR21_DF, aes(x = VAR21)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Kyla"
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Regn
 VAR22_DF <- toLongDF(dataDF, "VAR22")
+VAR22_DF <- RecodeTech(VAR22_DF, "VAR22")
+VAR22_DF$VAR22 <- as.factor(VAR22_DF$VAR22)
+
+ggplot(VAR22_DF, aes(x = VAR22)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Regn"
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Mörker
 VAR23_DF <- toLongDF(dataDF, "VAR23")
+VAR23_DF <- RecodeTech(VAR23_DF, "VAR23")
+VAR23_DF$VAR23 <- as.factor(VAR23_DF$VAR23)
+
+ggplot(VAR23_DF, aes(x = VAR23)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Mörker"
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Dimma
 VAR24_DF <- toLongDF(dataDF, "VAR24")
+VAR24_DF <- RecodeTech(VAR24_DF, "VAR24")
+VAR24_DF$VAR24 <- as.factor(VAR24_DF$VAR24)
+
+ggplot(VAR24_DF, aes(x = VAR24)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Dimma"
+  ) +
+  theme_minimal() 
+
+
+# merge into 1 DF
+MergeDF1 <- merge(VAR24_DF, VAR23_DF, by = c("ID", "name"))
+MergeDF2 <- merge(MergeDF1, VAR22_DF, by = c("ID", "name"))
+MergeDF3 <- merge(MergeDF2, VAR21_DF, by = c("ID", "name"))
+MergeDF4 <- merge(MergeDF3, VAR20_DF, by = c("ID", "name"))
+MergeDF5 <- merge(MergeDF4, VAR19_DF, by = c("ID", "name"))
+
+WeatherDF <- pivot_longer(MergeDF5, 
+                        cols = starts_with("VAR"), 
+                        names_to = "Weather", 
+                        values_to = "Belastning")
+
+WeatherDF <- WeatherDF |>
+  mutate(
+    Weather = recode(Weather, `VAR24` = "dimma", `VAR23` = "mörker", `VAR22` = "regn", `VAR21` = "kyla", `VAR20` = "snö", `VAR19` = "solsken", .default = NULL),
+  )
+
+ggplot(WeatherDF, aes(x = Belastning, fill=Weather)) +
+  facet_wrap(~name) +
+  geom_bar(position = 'dodge') +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under"
+  ) +
+  theme_minimal() 
 
 
 ########### Involvement #####################
 
+# Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?
 VAR25_DF <- toLongDF(dataDF, "VAR25")
+VAR25_DF <- RecodeTech(VAR25_DF, "VAR25")
+VAR25_DF$VAR25 <- as.factor(VAR25_DF$VAR25)
+
+ggplot(VAR25_DF, aes(x = VAR25)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
+  ) +
+  theme_minimal() 
+
+# Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
 VAR26_DF <- toLongDF(dataDF, "VAR26")
+VAR26_DF <- RecodeTech(VAR26_DF, "VAR26")
+VAR26_DF$VAR26 <- as.factor(VAR26_DF$VAR26)
+
+ggplot(VAR26_DF, aes(x = VAR26)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?"
+  ) +
+  theme_minimal() 
+
+# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? 
 VAR27_DF <- toLongDF(dataDF, "VAR27")
+VAR27_DF <- RecodeTech(VAR27_DF, "VAR27")
+VAR27_DF$VAR27 <- as.factor(VAR27_DF$VAR27)
+
+ggplot(VAR27_DF, aes(x = VAR27)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? "
+  ) +
+  theme_minimal() 
+
+# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?
 VAR28_DF <- toLongDF(dataDF, "VAR28")
+VAR28_DF <- RecodeTech(VAR28_DF, "VAR28")
+VAR28_DF$VAR28 <- as.factor(VAR28_DF$VAR28)
+
+ggplot(VAR28_DF, aes(x = VAR28)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?"
+  ) +
+  theme_minimal() 
+
+# Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
 VAR29_DF <- toLongDF(dataDF, "VAR29")
+VAR29_DF <- RecodeTech(VAR29_DF, "VAR29")
+VAR29_DF$VAR29 <- as.factor(VAR29_DF$VAR29)
+
+ggplot(VAR29_DF, aes(x = VAR29)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?"
+  ) +
+  theme_minimal() 
+
+
