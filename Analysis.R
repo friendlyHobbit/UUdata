@@ -156,7 +156,8 @@ ggplot(data=subset(RoleDF, !is.na(VAR01)), aes(x = VAR01)) +
   ) +
   theme_minimal() +
   theme(
-    plot.title = element_text(hjust = 0.5)
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 1)
   )
 
 
@@ -318,7 +319,7 @@ summary(NASA_TLX_DF)
 
 # VAR13
 ggplot(NASA_TLX_DF, aes(x=VAR13, fill=name)) + 
-  geom_histogram(position = 'dodge', binwidth = 0.5, center=TRUE) +
+  geom_histogram(position = 'dodge', binwidth = 0.5, center=NULL) +
   labs(
     x = "Mental belastning",
     y = "Count",
@@ -328,7 +329,7 @@ ggplot(NASA_TLX_DF, aes(x=VAR13, fill=name)) +
 # VAR14
 ggplot(NASA_TLX_DF, aes(x=VAR14)) + 
   facet_wrap(~name) +
-  geom_histogram(binwidth = 0.5, center=TRUE) +
+  geom_histogram(binwidth = 0.5, center=NULL) +
   labs(
     x = "Fysisk belastning",
     y = "Count",
