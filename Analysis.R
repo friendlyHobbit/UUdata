@@ -268,7 +268,7 @@ RecodeTech <- function(df, prefix, col = "name") {
 }
 
 
-# VAR12
+# VAR12 - usage
 VAR12_DF <- toLongDF(dataDF, "VAR12")
 VAR12_DF <- RecodeTech(VAR12_DF, "VAR12")
 
@@ -518,85 +518,32 @@ ggplot(WeatherDF, aes(x = Belastning, fill=Weather)) +
 VAR25_DF <- toLongDF(dataDF, "VAR25")
 VAR25_DF <- RecodeTech(VAR25_DF, "VAR25")
 VAR25_DF$VAR25 <- as.factor(VAR25_DF$VAR25)
-
-ggplot(VAR25_DF, aes(x = VAR25)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
-  ) +
-  theme_minimal() 
+VAR25_DF
 
 # Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
 VAR26_DF <- toLongDF(dataDF, "VAR26")
 VAR26_DF <- RecodeTech(VAR26_DF, "VAR26")
 VAR26_DF$VAR26 <- as.factor(VAR26_DF$VAR26)
 
-ggplot(VAR26_DF, aes(x = VAR26)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?"
-  ) +
-  theme_minimal() 
-
 # Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? 
 VAR27_DF <- toLongDF(dataDF, "VAR27")
 VAR27_DF <- RecodeTech(VAR27_DF, "VAR27")
 VAR27_DF$VAR27 <- as.factor(VAR27_DF$VAR27)
-
-ggplot(VAR27_DF, aes(x = VAR27)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? "
-  ) +
-  theme_minimal() 
 
 # Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?
 VAR28_DF <- toLongDF(dataDF, "VAR28")
 VAR28_DF <- RecodeTech(VAR28_DF, "VAR28")
 VAR28_DF$VAR28 <- as.factor(VAR28_DF$VAR28)
 
-ggplot(VAR28_DF, aes(x = VAR28)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?"
-  ) +
-  theme_minimal() 
-
 # Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
 VAR29_DF <- toLongDF(dataDF, "VAR29")
 VAR29_DF <- RecodeTech(VAR29_DF, "VAR29")
 VAR29_DF$VAR29 <- as.factor(VAR29_DF$VAR29)
 
-ggplot(VAR29_DF, aes(x = VAR29)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?"
-  ) +
-  theme_minimal() 
-
 # Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?
 VAR30_DF <- toLongDF(dataDF, "VAR30")
 VAR30_DF <- RecodeTech(VAR30_DF, "VAR30")
 VAR30_DF$VAR30 <- as.factor(VAR30_DF$VAR30)
-
-ggplot(VAR30_DF, aes(x = VAR30)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "# Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?"
-  ) +
-  theme_minimal() 
 
 # Har arbetsmiljö varit ett fokus när den valda tekniken har införts?
 VAR31_DF <- toLongDF(dataDF, "VAR31")
@@ -631,15 +578,6 @@ VAR33_DF <- toLongDF(dataDF, "VAR33")
 VAR33_DF <- RecodeTech(VAR33_DF, "VAR33")
 VAR33_DF$VAR33 <- as.factor(VAR33_DF$VAR33)
 
-ggplot(VAR33_DF, aes(x = VAR33)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har någon av dina kollegor medverkat i något utvecklingsarbete?  "
-  ) +
-  theme_minimal() 
-
 # Vet du hur du ska gå till väga om du har synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? 
 VAR34_DF <- toLongDF(dataDF, "VAR34")
 VAR34_DF <- RecodeTech(VAR34_DF, "VAR34")
@@ -673,84 +611,30 @@ VAR36_DF <- toLongDF(dataDF, "VAR36")
 VAR36_DF <- RecodeTech(VAR36_DF, "VAR36")
 VAR36_DF$VAR36 <- as.factor(VAR36_DF$VAR36)
 
-ggplot(VAR36_DF, aes(x = VAR36)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
-  ) +
-  theme_minimal() 
-
 # Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken? 
 VAR37_DF <- toLongDF(dataDF, "VAR37")
 VAR37_DF <- RecodeTech(VAR37_DF, "VAR37")
 VAR37_DF$VAR37 <- as.factor(VAR37_DF$VAR37)
-
-ggplot(VAR37_DF, aes(x = VAR37)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken? "
-  ) +
-  theme_minimal() 
 
 # Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? 
 VAR38_DF <- toLongDF(dataDF, "VAR38")
 VAR38_DF <- RecodeTech(VAR38_DF, "VAR38")
 VAR38_DF$VAR38 <- as.factor(VAR38_DF$VAR38)
 
-ggplot(VAR38_DF, aes(x = VAR38)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken? "
-  ) +
-  theme_minimal() 
-
 # Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? 
 VAR39_DF <- toLongDF(dataDF, "VAR39")
 VAR39_DF <- RecodeTech(VAR39_DF, "VAR39")
 VAR39_DF$VAR39 <- as.factor(VAR39_DF$VAR39)
-
-ggplot(VAR39_DF, aes(x = VAR39)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? "
-  ) +
-  theme_minimal() 
 
 # Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
 VAR40_DF <- toLongDF(dataDF, "VAR40")
 VAR40_DF <- RecodeTech(VAR40_DF, "VAR40")
 VAR40_DF$VAR40 <- as.factor(VAR40_DF$VAR40)
 
-ggplot(VAR40_DF, aes(x = VAR40)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet? "
-  ) +
-  theme_minimal() 
-
 # Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken? 
 VAR41_DF <- toLongDF(dataDF, "VAR41")
 VAR41_DF <- RecodeTech(VAR41_DF, "VAR41")
 VAR41_DF$VAR41 <- as.factor(VAR41_DF$VAR41)
-
-ggplot(VAR41_DF, aes(x = VAR41)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?  "
-  ) +
-  theme_minimal() 
 
 # Har arbetsmiljö varit ett fokus när den valda tekniken har införts? 
 VAR42_DF <- toLongDF(dataDF, "VAR42")
@@ -785,28 +669,10 @@ VAR44_DF <- toLongDF(dataDF, "VAR44")
 VAR44_DF <- RecodeTech(VAR44_DF, "VAR44")
 VAR44_DF$VAR44 <- as.factor(VAR44_DF$VAR44)
 
-ggplot(VAR44_DF, aes(x = VAR44)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har någon av dina kollegor medverkat i något utvecklingsarbete? "
-  ) +
-  theme_minimal() 
-
 # Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken?
 VAR45_DF <- toLongDF(dataDF, "VAR45")
 VAR45_DF <- RecodeTech(VAR45_DF, "VAR45")
 VAR45_DF$VAR45 <- as.factor(VAR45_DF$VAR45)
-
-ggplot(VAR45_DF, aes(x = VAR45)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? "
-  ) +
-  theme_minimal() 
 
 # Har du upplevt att det har varit tydligt varför den valda tekniken har införts?
 VAR46_DF <- toLongDF(dataDF, "VAR46")
@@ -876,7 +742,7 @@ table(VAR12_DF$name, VAR12_DF$VAR12)
 # add link to nasa tlx
 
 
-############## Participation and involvement #############
+############## Participation and involvement (manager/ground staff; airport size; roles) #############
 
 # get vars managers filled in
 GS_SS <- subset(dataDF, VAR00=="Chef")
@@ -885,23 +751,361 @@ names(GS_SS)
 
 # ground staff
 # VAR25 - Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?
+summary(VAR25_DF)
+
+ggplot(VAR25_DF, aes(x = VAR25)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
+  ) +
+  theme_minimal() 
+
 # VAR26 - Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
+summary(VAR26_DF)
+
+ggplot(VAR26_DF, aes(x = VAR26)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?"
+  ) +
+  theme_minimal() 
+
 # VAR27 - Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet?
+summary(VAR27_DF)
+
+ggplot(VAR27_DF, aes(x = VAR27)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? "
+  ) +
+  theme_minimal() 
+
 # VAR28 - Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?
+summary(VAR28_DF)
+
+ggplot(VAR28_DF, aes(x = VAR28)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?"
+  ) +
+  theme_minimal() 
+
 # VAR29 - Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet? 
+summary(VAR29_DF)
+
+ggplot(VAR29_DF, aes(x = VAR29)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?"
+  ) +
+  theme_minimal() 
+
 # VAR30 - Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?
+summary(VAR30_DF)
+
+ggplot(VAR30_DF, aes(x = VAR30)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "# Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?"
+  ) +
+  theme_minimal() 
+
 # VAR33 - Har någon av dina kollegor medverkat i något utvecklingsarbete? 
+summary(VAR33_DF)
+
+ggplot(VAR33_DF, aes(x = VAR33)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har någon av dina kollegor medverkat i något utvecklingsarbete?  "
+  ) +
+  theme_minimal() 
+
+
+involveDF1 <- merge(VAR25_DF, VAR26_DF, all = TRUE, by = c("ID", "name"))
+involveDF2 <- merge(VAR27_DF, VAR28_DF, all = TRUE, by = c("ID", "name"))
+involveDF3 <- merge(VAR29_DF, VAR30_DF, all = TRUE, by = c("ID", "name"))
+involveDF4 <- merge(involveDF1, involveDF2, all = TRUE, by = c("ID", "name"))
+involveDF5 <- merge(involveDF3, involveDF4, all = TRUE, by = c("ID", "name"))
+involveDF_gs <- merge(involveDF5, VAR33_DF, all = TRUE, by = c("ID", "name"))
+
+summary(involveDF_gs)
 
 # managers
 # VAR36 - Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?
-# VAR37 - Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
-# VAR38 - Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? 
-# VAR39 - Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken?
-# VAR40 - Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
-# VAR41 - Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?
-# VAR44 - Har någon av dina kollegor medverkat i något utvecklingsarbete?
-# VAR45 - Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken?
+ggplot(VAR36_DF, aes(x = VAR36)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
+  ) +
+  theme_minimal() 
 
+# VAR37 - Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
+ggplot(VAR37_DF, aes(x = VAR37)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken? "
+  ) +
+  theme_minimal() 
+
+# VAR38 - Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? 
+ggplot(VAR38_DF, aes(x = VAR38)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? "
+  ) +
+  theme_minimal() 
+
+# VAR39 - Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken?
+ggplot(VAR39_DF, aes(x = VAR39)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? "
+  ) +
+  theme_minimal() 
+
+# VAR40 - Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
+ggplot(VAR40_DF, aes(x = VAR40)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet? "
+  ) +
+  theme_minimal() 
+
+# VAR41 - Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?
+ggplot(VAR41_DF, aes(x = VAR41)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?  "
+  ) +
+  theme_minimal() 
+
+# VAR44 - Har någon av dina kollegor medverkat i något utvecklingsarbete?
+ggplot(VAR44_DF, aes(x = VAR44)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har någon av dina kollegor medverkat i något utvecklingsarbete? "
+  ) +
+  theme_minimal() 
+
+# VAR45 - Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken?
+ggplot(VAR45_DF, aes(x = VAR45)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? "
+  ) +
+  theme_minimal() 
+
+involveDF1 <- merge(VAR36_DF, VAR37_DF, all = TRUE, by = c("ID", "name"))
+involveDF2 <- merge(VAR38_DF, VAR39_DF, all = TRUE, by = c("ID", "name"))
+involveDF3 <- merge(VAR40_DF, VAR41_DF, all = TRUE, by = c("ID", "name"))
+involveDF4 <- merge(VAR44_DF, VAR45_DF, all = TRUE, by = c("ID", "name"))
+involveDF5 <- merge(involveDF1, involveDF2, all = TRUE, by = c("ID", "name"))
+involveDF6 <- merge(involveDF3, involveDF4, all = TRUE, by = c("ID", "name"))
+involveDF_chef <- merge(involveDF5, involveDF6, all = TRUE, by = c("ID", "name"))
+
+
+############## Involvement - NASA-TLX relationship #############
+
+involveDF_gs
+NASA_TLX_DF
+
+involveDF_gs$VAR29+ involveDF_gs$VAR30
+
+involveDF_gs$total <- rowSums(involveDF_gs[, c("VAR29", "VAR30", "VAR25", "VAR26", "VAR33", "VAR27", "VAR28")])
+
+
+# plot total nasa tlx
+ggplot(NASA_TLX_DF, aes(name, total)) +
+  geom_jitter(width = 0.15) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+ggplot(NASA_TLX_DF, aes(name, total)) +
+  geom_boxplot(outlier.shape = NA) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+############## Usage - NASA relationship (with respect to weather) #############
+
+# usage frequency
+summary(VAR12_DF)
+
+ggplot(VAR12_DF, aes(x = VAR12)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Hur ofta använder du tekniska hjälpmedelet?"
+  ) +
+  theme_minimal() 
+
+# plot total nasa tlx
+ggplot(NASA_TLX_DF, aes(name, total)) +
+  geom_jitter(width = 0.15) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+ggplot(NASA_TLX_DF, aes(name, total)) +
+  geom_boxplot(outlier.shape = NA) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+# correlation nasa tlx - usage
+nasa_usageDF <- merge(NASA_TLX_DF, VAR12_DF, by = c("ID", "name"), all = TRUE)
+
+ggplot(nasa_usageDF, aes(total, VAR12)) +
+  facet_wrap(~name) +
+  geom_boxplot(outlier.shape = NA) 
+  #geom_point()
+
+
+
+# weather
+# sun
+ggplot(VAR19_DF, aes(x = VAR19)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Starkt solsken"
+  ) +
+  theme_minimal() 
+
+# sun - usage
+weather1_usageDF <- merge(VAR19_DF, VAR12_DF, by = c("ID", "name"), all = TRUE)
+
+ggplot(weather1_usageDF, aes(x=VAR19, fill=VAR12)) +
+  facet_wrap(~name) +
+  geom_bar()
+
+# snow
+ggplot(VAR20_DF, aes(x = VAR20)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Snö."
+  ) +
+  theme_minimal() 
+
+# snow - usage
+weather2_usageDF <- merge(weather1_usageDF, VAR20_DF, by = c("ID", "name"), all = TRUE)
+
+ggplot(weather2_usageDF, aes(x=VAR20, fill=VAR12)) +
+  facet_wrap(~name) +
+  geom_bar()
+
+# cold
+ggplot(VAR21_DF, aes(x = VAR21)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Kyla"
+  ) +
+  theme_minimal() 
+
+# cold - usage
+weather3_usageDF <- merge(weather2_usageDF, VAR21_DF, by = c("ID", "name"), all = TRUE)
+
+ggplot(weather3_usageDF, aes(x=VAR21, fill=VAR12)) +
+  facet_wrap(~name) +
+  geom_bar()
+
+# rain
+ggplot(VAR22_DF, aes(x = VAR22)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Regn"
+  ) +
+  theme_minimal()
+
+# rain - usage
+weather4_usageDF <- merge(weather3_usageDF, VAR22_DF, by = c("ID", "name"), all = TRUE)
+
+ggplot(weather4_usageDF, aes(x=VAR22, fill=VAR12)) +
+  facet_wrap(~name) +
+  geom_bar()
+
+# Darkness
+ggplot(VAR23_DF, aes(x = VAR23)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Mörker"
+  ) +
+  theme_minimal() 
+
+# darkness - usage
+weather5_usageDF <- merge(weather4_usageDF, VAR23_DF, by = c("ID", "name"), all = TRUE)
+
+ggplot(weather5_usageDF, aes(x=VAR23, fill=VAR12)) +
+  facet_wrap(~name) +
+  geom_bar()
+
+# Dimma
+ggplot(VAR24_DF, aes(x = VAR24)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Dimma"
+  ) +
+  theme_minimal() 
+
+# dimma - usage
+weather6_usageDF <- merge(weather5_usageDF, VAR24_DF, by = c("ID", "name"), all = TRUE)
+
+ggplot(weather6_usageDF, aes(x=VAR24, fill=VAR12)) +
+  facet_wrap(~name) +
+  geom_bar(position = 'dodge')
+
+# weather - difficulty
+
+
+
+
+# involvement - nasa
 
 
 
