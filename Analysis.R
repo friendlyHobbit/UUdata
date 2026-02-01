@@ -17,6 +17,8 @@ dataDF$ID <- as.factor(dataDF$ID)
 
 summary(dataDF$ID)
 
+# recode 0 to NA
+dataDF[dataDF == 0] <- NA
 
 ########### Initial analysis #################
 
@@ -518,7 +520,6 @@ ggplot(WeatherDF, aes(x = Belastning, fill=Weather)) +
 VAR25_DF <- toLongDF(dataDF, "VAR25")
 VAR25_DF <- RecodeTech(VAR25_DF, "VAR25")
 VAR25_DF$VAR25 <- as.factor(VAR25_DF$VAR25)
-VAR25_DF
 
 # Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
 VAR26_DF <- toLongDF(dataDF, "VAR26")
@@ -576,7 +577,7 @@ ggplot(VAR32_DF, aes(x = VAR32)) +
 # Har någon av dina kollegor medverkat i något utvecklingsarbete? 
 VAR33_DF <- toLongDF(dataDF, "VAR33")
 VAR33_DF <- RecodeTech(VAR33_DF, "VAR33")
-VAR33_DF$VAR33 <- as.factor(VAR33_DF$VAR33)
+#VAR33_DF$VAR33 <- as.factor(VAR33_DF$VAR33)
 
 # Vet du hur du ska gå till väga om du har synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? 
 VAR34_DF <- toLongDF(dataDF, "VAR34")
@@ -936,12 +937,15 @@ involveDF_chef <- merge(involveDF5, involveDF6, all = TRUE, by = c("ID", "name")
 
 ############## Involvement - NASA-TLX relationship #############
 
-involveDF_gs
-NASA_TLX_DF
+summary(involveDF_gs)
+summary(NASA_TLX_DF)
 
-involveDF_gs$VAR29+ involveDF_gs$VAR30
 
-involveDF_gs$total <- rowSums(involveDF_gs[, c("VAR29", "VAR30", "VAR25", "VAR26", "VAR33", "VAR27", "VAR28")])
+vars <- c("VAR29", "VAR30", "VAR25", "VAR26", "VAR33", "VAR27", "VAR28")
+
+involveDF_gs$sum_score    <- rowSums(data.frame(lapply(involveDF_gs[, vars], function(x) as.numeric(x))), na.rm = TRUE)
+involveDF_gs$mean_score   <- rowMeans(data.frame(lapply(involveDF_gs[, vars], function(x) as.numeric(x))), na.rm = TRUE)
+involveDF_gs$median_score <- apply(data.frame(lapply(involveDF_gs[, vars], function(x) as.numeric(as.character(x)))), 1, median, na.rm = TRUE)
 
 
 # plot total nasa tlx
@@ -957,6 +961,37 @@ ggplot(NASA_TLX_DF, aes(name, total)) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
+
+# involvement
+ggplot(involveDF_gs, aes(x = median_score)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "involvement median"
+  ) +
+  theme_minimal() 
+
+ggplot(involveDF_gs, aes(x = mean_score)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "involvement mean"
+  ) +
+  theme_minimal() 
+
+# involvement x nasa tlx
+nasa_involvementDF <- merge(involveDF_gs, NASA_TLX_DF, by = c("ID", "name"))
+
+
+ggplot(nasa_involvementDF, aes(mean_score, total)) +
+  geom_point() +
+  labs(
+    y = "NASA TLX Rating",
+    x = "Mean involvement"
+  ) 
+  
 
 
 ############## Usage - NASA relationship (with respect to weather) #############
@@ -1013,7 +1048,13 @@ weather1_usageDF <- merge(VAR19_DF, VAR12_DF, by = c("ID", "name"), all = TRUE)
 
 ggplot(weather1_usageDF, aes(x=VAR19, fill=VAR12)) +
   facet_wrap(~name) +
-  geom_bar()
+  geom_bar(na.rm = TRUE) +
+  labs(
+    fill = "Use frequency",
+    x = "Difficulty in use",
+    title = "Den valda tekniken blir en större belastning att använda under: Starkt solsken "
+  )
+
 
 # snow
 ggplot(VAR20_DF, aes(x = VAR20)) +
@@ -1030,7 +1071,13 @@ weather2_usageDF <- merge(weather1_usageDF, VAR20_DF, by = c("ID", "name"), all 
 
 ggplot(weather2_usageDF, aes(x=VAR20, fill=VAR12)) +
   facet_wrap(~name) +
-  geom_bar()
+  geom_bar() +
+  labs(
+    fill = "Use frequency",
+    x = "Difficulty in use",
+    title = "Den valda tekniken blir en större belastning att använda under: Snö "
+  )
+
 
 # cold
 ggplot(VAR21_DF, aes(x = VAR21)) +
@@ -1047,7 +1094,13 @@ weather3_usageDF <- merge(weather2_usageDF, VAR21_DF, by = c("ID", "name"), all 
 
 ggplot(weather3_usageDF, aes(x=VAR21, fill=VAR12)) +
   facet_wrap(~name) +
-  geom_bar()
+  geom_bar() +
+  labs(
+    fill = "Use frequency",
+    x = "Difficulty in use",
+    title = "Den valda tekniken blir en större belastning att använda under: Kyla "
+  )
+
 
 # rain
 ggplot(VAR22_DF, aes(x = VAR22)) +
@@ -1064,7 +1117,13 @@ weather4_usageDF <- merge(weather3_usageDF, VAR22_DF, by = c("ID", "name"), all 
 
 ggplot(weather4_usageDF, aes(x=VAR22, fill=VAR12)) +
   facet_wrap(~name) +
-  geom_bar()
+  geom_bar() +
+  labs(
+    fill = "Use frequency",
+    x = "Difficulty in use",
+    title = "Den valda tekniken blir en större belastning att använda under: Regn "
+  )
+
 
 # Darkness
 ggplot(VAR23_DF, aes(x = VAR23)) +
@@ -1081,7 +1140,13 @@ weather5_usageDF <- merge(weather4_usageDF, VAR23_DF, by = c("ID", "name"), all 
 
 ggplot(weather5_usageDF, aes(x=VAR23, fill=VAR12)) +
   facet_wrap(~name) +
-  geom_bar()
+  geom_bar() +
+  labs(
+    fill = "Use frequency",
+    x = "Difficulty in use",
+    title = "Den valda tekniken blir en större belastning att använda under: Mörker "
+  )
+
 
 # Dimma
 ggplot(VAR24_DF, aes(x = VAR24)) +
@@ -1098,7 +1163,14 @@ weather6_usageDF <- merge(weather5_usageDF, VAR24_DF, by = c("ID", "name"), all 
 
 ggplot(weather6_usageDF, aes(x=VAR24, fill=VAR12)) +
   facet_wrap(~name) +
-  geom_bar(position = 'dodge')
+  geom_bar() +
+  labs(
+    fill = "Use frequency",
+    x = "Difficulty in use",
+    title = "Den valda tekniken blir en större belastning att använda under: Dimma "
+)
+
+
 
 # weather - difficulty
 
