@@ -18,7 +18,7 @@ dataDF$ID <- as.factor(dataDF$ID)
 summary(dataDF$ID)
 
 # recode 0 to NA
-dataDF[dataDF == 0] <- NA
+#dataDF[dataDF == 0] <- NA
 
 ########### Initial analysis #################
 
@@ -703,6 +703,9 @@ ggplot(VAR46_DF, aes(x = VAR46)) +
   ) +
   theme_minimal() 
 
+# Look at involvement differences between GS and managers
+# differences between airport size and role?
+
 
 ########## Tools available vs Most used tools ###########
 
@@ -1012,15 +1015,8 @@ ggplot(nasa_involvementDF, aes(mean_score, total)) +
 # usage frequency
 summary(VAR12_DF)
 
-name_counts <- VAR12_DF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(VAR12_DF, aes(x = VAR12)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(VAR12_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
@@ -1198,14 +1194,12 @@ ggplot(weather6_usageDF, aes(x=VAR24, fill=VAR12)) +
     title = "Den valda tekniken blir en större belastning att använda under: Dimma "
 )
 
-
-
 # weather - difficulty
 
 
 
 
-# involvement - nasa
+
 
 
 
