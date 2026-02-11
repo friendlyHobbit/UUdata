@@ -163,6 +163,20 @@ ggplot(data=subset(RoleDF, !is.na(VAR01)), aes(x = VAR01)) +
   )
 
 
+########### general functions for plot labels ####################
+
+# Adds numbers to tool labels in the plots
+addToolCount <- function(df){
+  name_counts <- df %>%    
+    count(name)
+  
+  x_labels <- setNames(
+    paste0(name_counts$name, " (n = ", name_counts$n, ")"),
+    name_counts$name
+  )
+  return(x_labels)
+}
+
 
 
 ########### Tech #############
@@ -318,16 +332,10 @@ NASA_TLX_DF$total <- rowSums(NASA_TLX_DF[, c("VAR16_reverse", "VAR18", "VAR17", 
 
 summary(NASA_TLX_DF)
 
-name_counts <- NASA_TLX_DF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
 
 # VAR13
 ggplot(NASA_TLX_DF, aes(x=VAR13)) + 
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(NASA_TLX_DF))) +
   geom_histogram(binwidth = 0.5, center=NULL) +
   labs(
     x = "Mental belastning",
@@ -337,7 +345,7 @@ ggplot(NASA_TLX_DF, aes(x=VAR13)) +
 
 # VAR14
 ggplot(NASA_TLX_DF, aes(x=VAR14)) + 
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(NASA_TLX_DF))) +
   geom_histogram(binwidth = 0.5, center=NULL) +
   labs(
     x = "Fysisk belastning",
@@ -347,7 +355,7 @@ ggplot(NASA_TLX_DF, aes(x=VAR14)) +
 
 # VAR15
 ggplot(NASA_TLX_DF, aes(x=VAR15)) + 
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(NASA_TLX_DF))) +
   geom_histogram(binwidth = 0.5, center=NULL) +
   labs(
     x = "Tidsmässig belastning",
@@ -357,7 +365,7 @@ ggplot(NASA_TLX_DF, aes(x=VAR15)) +
 
 # VAR16
 ggplot(NASA_TLX_DF, aes(x=VAR16)) + 
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(NASA_TLX_DF))) +
   geom_histogram(binwidth = 0.5, center=NULL) +
   labs(
     x = "Prestation",
@@ -367,7 +375,7 @@ ggplot(NASA_TLX_DF, aes(x=VAR16)) +
 
 # VAR17
 ggplot(NASA_TLX_DF, aes(x=VAR17)) + 
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(NASA_TLX_DF))) +
   geom_histogram(binwidth = 0.5, center=NULL) +
   labs(
     x = "Ansträngning",
@@ -377,7 +385,7 @@ ggplot(NASA_TLX_DF, aes(x=VAR17)) +
 
 # VAR18
 ggplot(NASA_TLX_DF, aes(x=VAR17)) + 
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(NASA_TLX_DF))) +
   geom_histogram(binwidth = 0.5, center=NULL) +
   labs(
     x = "Frustration",
@@ -389,7 +397,7 @@ ggplot(NASA_TLX_DF, aes(x=VAR17)) +
 # plot total nasa tlx
 ggplot(NASA_TLX_DF, aes(name, total)) +
   geom_jitter(width = 0.15) +
-  scale_x_discrete(labels = x_labels) +
+  scale_x_discrete(labels = addToolCount(NASA_TLX_DF)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
@@ -397,7 +405,7 @@ ggplot(NASA_TLX_DF, aes(name, total)) +
 
 ggplot(NASA_TLX_DF, aes(name, total)) +
   geom_boxplot(outlier.shape = NA) +
-  scale_x_discrete(labels = x_labels) +
+  scale_x_discrete(labels = addToolCount(NASA_TLX_DF)) +
   geom_jitter(width = 0.2) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
@@ -730,16 +738,10 @@ VAR12_DF$VAR12 <- recode_factor(
   `6` = "Aldrig"
 )
 
-name_counts <- VAR12_DF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
 
 ggplot(VAR12_DF, aes(x = name, fill = VAR12)) +
   geom_bar() +
-  scale_x_discrete(labels = x_labels) +
+  scale_x_discrete(labels = addToolCount(VAR12_DF)) +
   labs(
     y = "Count",
     fill = "Frequency of use",
@@ -1027,17 +1029,10 @@ ggplot(VAR12_DF, aes(x = VAR12)) +
   theme_minimal() 
 
 # plot total nasa tlx
-name_counts <- NASA_TLX_DF %>%    # Adds numbers to tool labels
-  count(name)
-x_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(NASA_TLX_DF, aes(name, total)) +
   geom_jitter(width = 0.15) +
   theme_minimal() +
-  scale_x_discrete(labels = x_labels) +
+  scale_x_discrete(labels = addToolCount(NASA_TLX_DF)) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
   ) +
@@ -1047,7 +1042,7 @@ ggplot(NASA_TLX_DF, aes(name, total)) +
 
 ggplot(NASA_TLX_DF, aes(name, total)) +
   geom_boxplot(outlier.shape = NA) +
-  scale_x_discrete(labels = x_labels) +
+  scale_x_discrete(labels = addToolCount(NASA_TLX_DF)) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
@@ -1055,15 +1050,8 @@ ggplot(NASA_TLX_DF, aes(name, total)) +
 # correlation nasa tlx - usage
 nasa_usageDF <- merge(NASA_TLX_DF, VAR12_DF, by = c("ID", "name"), all = TRUE)
 
-name_counts <- nasa_usageDF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(nasa_usageDF, aes(total, VAR12)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(nasa_usageDF))) +
   geom_boxplot(outlier.shape = NA) +
   labs(
     y = "Hur ofta använder du tekniska hjälpmedelet?",
@@ -1074,15 +1062,8 @@ ggplot(nasa_usageDF, aes(total, VAR12)) +
 
 # weather
 # sun
-name_counts <- VAR19_DF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(VAR19_DF, aes(x = VAR19)) +
-  facet_wrap(~name, , labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, , labeller = labeller(name = addToolCount(VAR19_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
@@ -1093,15 +1074,8 @@ ggplot(VAR19_DF, aes(x = VAR19)) +
 # sun - usage
 weather1_usageDF <- merge(VAR19_DF, VAR12_DF, by = c("ID", "name"), all = TRUE)
 
-name_counts <- weather1_usageDF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(weather1_usageDF, aes(x=VAR19, fill=VAR12)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(weather1_usageDF))) +
   geom_bar(na.rm = TRUE) +
   labs(
     fill = "Use frequency",
@@ -1111,15 +1085,8 @@ ggplot(weather1_usageDF, aes(x=VAR19, fill=VAR12)) +
 
 
 # snow
-name_counts <- VAR20_DF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(VAR20_DF, aes(x = VAR20)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(VAR20_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
@@ -1130,15 +1097,8 @@ ggplot(VAR20_DF, aes(x = VAR20)) +
 # snow - usage
 weather2_usageDF <- merge(weather1_usageDF, VAR20_DF, by = c("ID", "name"), all = TRUE)
 
-name_counts <- weather2_usageDF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(weather2_usageDF, aes(x=VAR20, fill=VAR12)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(weather2_usageDF))) +
   geom_bar() +
   labs(
     fill = "Use frequency",
@@ -1148,15 +1108,8 @@ ggplot(weather2_usageDF, aes(x=VAR20, fill=VAR12)) +
 
 
 # cold
-name_counts <- VAR21_DF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(VAR21_DF, aes(x = VAR21)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(VAR21_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
@@ -1167,15 +1120,8 @@ ggplot(VAR21_DF, aes(x = VAR21)) +
 # cold - usage
 weather3_usageDF <- merge(weather2_usageDF, VAR21_DF, by = c("ID", "name"), all = TRUE)
 
-name_counts <- weather3_usageDF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(weather3_usageDF, aes(x=VAR21, fill=VAR12)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(weather3_usageDF))) +
   geom_bar() +
   labs(
     fill = "Use frequency",
@@ -1185,15 +1131,8 @@ ggplot(weather3_usageDF, aes(x=VAR21, fill=VAR12)) +
 
 
 # rain
-name_counts <- VAR22_DF %>%   # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(VAR22_DF, aes(x = VAR22)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(VAR22_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
@@ -1204,16 +1143,8 @@ ggplot(VAR22_DF, aes(x = VAR22)) +
 # rain - usage
 weather4_usageDF <- merge(weather3_usageDF, VAR22_DF, by = c("ID", "name"), all = TRUE)
 
-# Adds numbers to tool labels
-name_counts <- weather4_usageDF %>%
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(weather4_usageDF, aes(x=VAR22, fill=VAR12)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(weather4_usageDF))) +
   geom_bar() +
   labs(
     fill = "Use frequency",
@@ -1223,15 +1154,8 @@ ggplot(weather4_usageDF, aes(x=VAR22, fill=VAR12)) +
 
 
 # Darkness
-name_counts <- VAR23_DF %>%  # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(VAR23_DF, aes(x = VAR23)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(VAR23_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
@@ -1242,16 +1166,8 @@ ggplot(VAR23_DF, aes(x = VAR23)) +
 # darkness - usage
 weather5_usageDF <- merge(weather4_usageDF, VAR23_DF, by = c("ID", "name"), all = TRUE)
 
-# Adds numbers to tool labels
-name_counts <- weather5_usageDF %>%
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(weather5_usageDF, aes(x=VAR23, fill=VAR12)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(weather5_usageDF))) +
   geom_bar() +
   labs(
     fill = "Use frequency",
@@ -1261,15 +1177,8 @@ ggplot(weather5_usageDF, aes(x=VAR23, fill=VAR12)) +
 
 
 # Dimma
-name_counts <- VAR24_DF %>%  # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(VAR24_DF, aes(x = VAR24)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(VAR24_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
@@ -1280,15 +1189,8 @@ ggplot(VAR24_DF, aes(x = VAR24)) +
 # dimma - usage
 weather6_usageDF <- merge(weather5_usageDF, VAR24_DF, by = c("ID", "name"), all = TRUE)
 
-name_counts <- VAR24_DF %>%  # Adds numbers to tool labels
-  count(name)
-facet_labels <- setNames(
-  paste0(name_counts$name, " (n = ", name_counts$n, ")"),
-  name_counts$name
-)
-
 ggplot(weather6_usageDF, aes(x=VAR24, fill=VAR12)) +
-  facet_wrap(~name, labeller = labeller(name = facet_labels)) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(weather6_usageDF))) +
   geom_bar() +
   labs(
     fill = "Use frequency",
