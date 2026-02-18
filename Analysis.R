@@ -685,7 +685,7 @@ ggplot(involvementDF, aes(x = rMedian, fill = VAR05)) +
   geom_bar(position = "stack") +
   labs(
     y = "count",
-    x = "median",
+    x = "median involvement",
     fill = "Airport size"
   ) +
   theme_minimal() 
@@ -696,7 +696,7 @@ ggplot(involvementDF, aes(x = rMedian, fill = VAR00)) +
   geom_bar(position = "stack") +
   labs(
     y = "count",
-    x = "median",
+    x = "median involvement",
     fill = "role"
   ) +
   theme_minimal() 
