@@ -41,10 +41,10 @@ ggplot(dataDF, aes(x = VAR00, fill = VAR04)) +
     position = position_stack(vjust = 0.5)
   ) +
   labs(
-    title = "Managers vs Ground Staff",
-    x = "Roles",
+    title = "Vilken roll har du på din arbetsplats?",
+    x = NULL,
     y = "Count",
-    fill = "Gender"
+    fill = "Kön"
   ) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
@@ -56,7 +56,8 @@ ggplot(dataDF, aes(x = VAR03, fill = VAR03)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
-    x = "Age",
+    title = "Hur gammal är du?",
+    x = NULL,
     y = "count"
   ) +
   theme_minimal() +
@@ -71,7 +72,7 @@ ggplot(dataDF, aes(x = VAR04)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
-    x = "gender",
+    x = "Kön",
     y = "count"
   ) +
   theme_minimal() +
@@ -85,7 +86,8 @@ ggplot(dataDF, aes(x = VAR05)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
-    x = "",
+    x = NULL,
+    title = "Storlek på flygplatsen där du arbetar",
     y = "count"
   ) +
   theme_minimal() +
@@ -101,7 +103,8 @@ ggplot(dataDF, aes(x = VAR06)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
-    x = "VAR06_worktime",
+    x = NULL,
+    title = "Erfarenhet på den flygplats du för nuvarande arbetar på",
     y = "count"
   ) +
   theme_minimal() +
@@ -114,7 +117,8 @@ ggplot(dataDF, aes(x = VAR07)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
-    x = "VAR07_worktime",
+    x = NULL,
+    title = "Erfarenhet av arbete på flygplats i allmänhet",
     y = "count"
   ) +
   theme_minimal() +
@@ -147,7 +151,8 @@ ggplot(data=subset(RoleDF, !is.na(VAR02)), aes(x = VAR02)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
-    x = "Manager roles",
+    x = NULL,
+    title = "Vilken roll som chef har du på din arbetsplats?",
     y = "count"
   ) +
   theme_minimal() +
@@ -160,7 +165,8 @@ ggplot(data=subset(RoleDF, !is.na(VAR01)), aes(x = VAR01)) +
   geom_bar(fill = "#0072B2") +
   geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.3) +
   labs(
-    x = "Ground staff roles",
+    x = NULL,
+    title = "Vilken roll som markpersonal har du på din arbetsplats?",
     y = "count"
   ) +
   theme_minimal() +
@@ -218,7 +224,8 @@ ggplot(VAR08_DF, aes(x = VAR08, fill = VAR05)) +
     vjust = -0.2
   ) +
   labs(
-    fill = "Airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "Count",
     title = "Vilka tekniska hjälpmedel i denna lista har ni på flygplatsen där du arbetar och som finns tillgänglig i din arbetsroll?"
   ) +
@@ -237,9 +244,10 @@ ggplot(VAR09_DF, aes(x = VAR09, fill = VAR05)) +
     vjust = -0.2
   ) +
   labs(
-    fill = "Airport size",
+    fill = "Storlek flygplatsen",
     y = "Count",
-    title = "Vilka tekniska hjälpmedel i denna lista har ni på flygplatsen?"
+    title = "Vilka tekniska hjälpmedel i denna lista har ni på flygplatsen?",
+    x = NULL
   ) +
   theme_minimal() +
   theme(
@@ -257,9 +265,11 @@ ggplot(VAR10_DF, aes(x = VAR10, fill = VAR05)) +
     vjust = -0.2
   ) +
   labs(
-    fill = "Airport size",
+    fill = "Storlek flygplatsen",
     y = "Count",
-    title = "Välj minst två tekniska hjälpmedel som du anser ha koppling till arbetsmiljön i ditt arbete."
+    title = "Välj minst två tekniska hjälpmedel som du anser ha koppling till arbetsmiljön i ditt arbete.",
+    x = NULL
+    
   ) +
   theme_minimal() +
   theme(
@@ -277,8 +287,9 @@ ggplot(VAR11_DF, aes(x = VAR11, fill = VAR05)) +
     vjust = -0.2
   ) +
   labs(
-    fill = "Airport size",
+    fill = "Storlek flygplatsen",
     y = "Count",
+    x = NULL,
     title = "Du kommer att få svara på frågor om hur du upplevde processen med att införa tekniska hjälpmedel, samt vilken roll du hade i införandet. Välj minst två tekniska hjälpmedel som du anser vara mest relevant kopplat till arbetsmiljön i arbetet för markpersonalen."
   ) +
   theme_minimal() +
@@ -307,11 +318,6 @@ RecodeTech <- function(df, prefix, col = "name") {
       }
     )
 }
-
-
-# VAR12 - usage
-VAR12_DF <- toLongDF(dataDF, "VAR12")
-VAR12_DF <- RecodeTech(VAR12_DF, "VAR12")
 
 # tlx VAR13
 VAR13_DF <- toLongDF(dataDF, "VAR13")
@@ -423,6 +429,10 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  labs(
+    x = NULL,
+    y = "NASA-TLX mean"
   )
 
 ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
@@ -431,125 +441,11 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
   geom_jitter(width = 0.2) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  labs(
+    x = NULL,
+    y = "NASA-TLX mean"
   )
-
-
-
-############# Weather ##########################
-
-# Den valda tekniken blir en större belastning att använda under: Starkt solsken. 
-VAR19_DF <- toLongDF(dataDF, "VAR19")
-VAR19_DF <- RecodeTech(VAR19_DF, "VAR19")
-VAR19_DF$VAR19 <- as.factor(VAR19_DF$VAR19)
-summary(VAR19_DF)
-
-ggplot(VAR19_DF, aes(x = VAR19)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Starkt solsken"
-  ) +
-  theme_minimal() 
-
-# Den valda tekniken blir en större belastning att använda under: Snö.
-VAR20_DF <- toLongDF(dataDF, "VAR20")
-VAR20_DF <- RecodeTech(VAR20_DF, "VAR20")
-VAR20_DF$VAR20 <- as.factor(VAR20_DF$VAR20)
-
-ggplot(VAR20_DF, aes(x = VAR20)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Snö."
-  ) +
-  theme_minimal() 
-
-# Den valda tekniken blir en större belastning att använda under: Kyla
-VAR21_DF <- toLongDF(dataDF, "VAR21")
-VAR21_DF <- RecodeTech(VAR21_DF, "VAR21")
-VAR21_DF$VAR21 <- as.factor(VAR21_DF$VAR21)
-
-ggplot(VAR21_DF, aes(x = VAR21)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Kyla"
-  ) +
-  theme_minimal() 
-
-# Den valda tekniken blir en större belastning att använda under: Regn
-VAR22_DF <- toLongDF(dataDF, "VAR22")
-VAR22_DF <- RecodeTech(VAR22_DF, "VAR22")
-VAR22_DF$VAR22 <- as.factor(VAR22_DF$VAR22)
-
-ggplot(VAR22_DF, aes(x = VAR22)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Regn"
-  ) +
-  theme_minimal() 
-
-# Den valda tekniken blir en större belastning att använda under: Mörker
-VAR23_DF <- toLongDF(dataDF, "VAR23")
-VAR23_DF <- RecodeTech(VAR23_DF, "VAR23")
-VAR23_DF$VAR23 <- as.factor(VAR23_DF$VAR23)
-
-ggplot(VAR23_DF, aes(x = VAR23)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Mörker"
-  ) +
-  theme_minimal() 
-
-# Den valda tekniken blir en större belastning att använda under: Dimma
-VAR24_DF <- toLongDF(dataDF, "VAR24")
-VAR24_DF <- RecodeTech(VAR24_DF, "VAR24")
-VAR24_DF$VAR24 <- as.factor(VAR24_DF$VAR24)
-
-ggplot(VAR24_DF, aes(x = VAR24)) +
-  facet_wrap(~name) +
-  geom_bar(fill = "#0072B2") +
-  labs(
-    y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Dimma"
-  ) +
-  theme_minimal() 
-
-
-# merge into 1 DF
-MergeDF1 <- merge(VAR24_DF, VAR23_DF, by = c("ID", "name", "VAR00", "VAR05"))
-MergeDF2 <- merge(MergeDF1, VAR22_DF, by = c("ID", "name", "VAR00", "VAR05"))
-MergeDF3 <- merge(MergeDF2, VAR21_DF, by = c("ID", "name", "VAR00", "VAR05"))
-MergeDF4 <- merge(MergeDF3, VAR20_DF, by = c("ID", "name", "VAR00", "VAR05"))
-MergeDF5 <- merge(MergeDF4, VAR19_DF, by = c("ID", "name", "VAR00", "VAR05"))
-MergeDF5 <- subset(MergeDF5, select = -c(VAR00,VAR05) )
-
-WeatherDF <- pivot_longer(MergeDF5, 
-                        cols = starts_with("VAR"), 
-                        names_to = "Weather", 
-                        values_to = "Belastning")
-
-WeatherDF <- WeatherDF |>
-  mutate(
-    Weather = recode(Weather, `VAR24` = "dimma", `VAR23` = "mörker", `VAR22` = "regn", `VAR21` = "kyla", `VAR20` = "snö", `VAR19` = "solsken", .default = NULL),
-  )
-
-
-ggplot(WeatherDF, aes(x = Belastning, fill=Weather)) +
-  facet_wrap(~name) +
-  geom_bar(position = 'dodge') +
-  labs(
-    y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under"
-  ) +
-  theme_minimal() 
 
 
 ########### Involvement #####################
@@ -685,8 +581,8 @@ ggplot(involvementDF, aes(x = rMedian, fill = VAR05)) +
   geom_bar(position = "stack") +
   labs(
     y = "count",
-    x = "median involvement",
-    fill = "Airport size"
+    x = "Median engagemang",
+    fill = "Storlek flygplatsen"
   ) +
   theme_minimal() 
 
@@ -696,8 +592,8 @@ ggplot(involvementDF, aes(x = rMedian, fill = VAR00)) +
   geom_bar(position = "stack") +
   labs(
     y = "count",
-    x = "median involvement",
-    fill = "role"
+    x = "Median engagemang",
+    fill = "Roll"
   ) +
   theme_minimal() 
 
@@ -708,7 +604,8 @@ ggplot(VAR25_DF, aes(x = VAR25, fill = VAR05)) +
   geom_bar(position = "stack") +
   labs(
     y = "count",
-    fill = "airport size",
+    x = NULL,
+    fill = "Storlek flygplatsen",
     title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
   ) +
   theme_minimal() 
@@ -718,8 +615,9 @@ ggplot(VAR26_DF, aes(x = VAR26, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
     y = "count",
+    x = NULL,
     title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?"
   ) +
   theme_minimal() 
@@ -729,9 +627,10 @@ ggplot(VAR27_DF, aes(x = VAR27, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
     y = "count",
-    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? "
+    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? ",
+    x = NULL
   ) +
   theme_minimal() 
 
@@ -740,8 +639,9 @@ ggplot(VAR28_DF, aes(x = VAR28, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
     y = "count",
+    x = NULL,
     title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?"
   ) +
   theme_minimal() 
@@ -751,7 +651,8 @@ ggplot(VAR29_DF, aes(x = VAR29, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?"
   ) +
@@ -762,7 +663,8 @@ ggplot(VAR30_DF, aes(x = VAR30, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?"
   ) +
@@ -772,7 +674,8 @@ ggplot(VAR31_DF, aes(x = VAR31, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har arbetsmiljö varit ett fokus när den valda tekniken har införts?"
   ) +
@@ -782,7 +685,8 @@ ggplot(VAR32_DF, aes(x = VAR32, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Genomfördes en riskanalys innan den valda tekniken infördes? "
   ) +
@@ -793,7 +697,8 @@ ggplot(VAR33_DF, aes(x = VAR33, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har någon av dina kollegor medverkat i något utvecklingsarbete?  "
   ) +
@@ -803,7 +708,8 @@ ggplot(VAR34_DF, aes(x = VAR34, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Vet du hur du ska gå till väga om du har synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? "
   ) +
@@ -813,7 +719,8 @@ ggplot(VAR35_DF, aes(x = VAR35, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har du upplevt att det har varit tydligt varför den valda tekniken har införts?"
   ) +
@@ -824,7 +731,8 @@ ggplot(VAR36_DF, aes(x = VAR36, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
   ) +
@@ -835,7 +743,8 @@ ggplot(VAR37_DF, aes(x = VAR37, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken? "
   ) +
@@ -846,7 +755,8 @@ ggplot(VAR38_DF, aes(x = VAR38, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? "
   ) +
@@ -857,7 +767,8 @@ ggplot(VAR39_DF, aes(x = VAR39, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? "
   ) +
@@ -868,7 +779,8 @@ ggplot(VAR40_DF, aes(x = VAR40, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet? "
   ) +
@@ -879,7 +791,8 @@ ggplot(VAR41_DF, aes(x = VAR41, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?  "
   ) +
@@ -889,7 +802,8 @@ ggplot(VAR42_DF, aes(x = VAR42, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har arbetsmiljö varit ett fokus när den valda tekniken har införts? "
   ) +
@@ -899,7 +813,8 @@ ggplot(VAR43_DF, aes(x = VAR43, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Genomfördes en riskanalys innan den valda tekniken infördes?"
   ) +
@@ -910,7 +825,8 @@ ggplot(VAR44_DF, aes(x = VAR44, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har någon av dina kollegor medverkat i något utvecklingsarbete? "
   ) +
@@ -921,7 +837,8 @@ ggplot(VAR45_DF, aes(x = VAR45, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? "
   ) +
@@ -931,7 +848,8 @@ ggplot(VAR46_DF, aes(x = VAR46, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
-    fill = "airport size",
+    fill = "Storlek flygplatsen",
+    x = NULL,
     y = "count",
     title = "Har du upplevt att det har varit tydligt varför den valda tekniken har införts? "
   ) +
@@ -939,6 +857,8 @@ ggplot(VAR46_DF, aes(x = VAR46, fill = VAR05)) +
 
 
 # differences between roles?
+
+
 
 
 ############## Involvement - NASA-TLX relationship #############
@@ -990,8 +910,8 @@ nasa_involvementDF <- merge(involvementDF, NASA_TLX_DF, by = c("ID", "name", "VA
 ggplot(nasa_involvementDF, aes(mean, nasa_mean)) +
   geom_point() +
   labs(
-    y = "NASA TLX Rating",
-    x = "Mean involvement"
+    y = "NASA TLX",
+    x = "Mean engagemang"
   ) 
 
 
@@ -1019,7 +939,12 @@ table(VAR08_DF$VAR08)
 
 # used tools
 # VAR12 - Hur ofta använder du de tekniska hjälpmedlen som du har valt?
-VAR12_DF
+VAR12_DF <- toLongDF(dataDF, "VAR12")
+VAR12_DF <- RecodeTech(VAR12_DF, "VAR12")
+summary(VAR12_DF)
+
+# inverse
+VAR12_DF$VAR12_rev <- 7 - VAR12_DF$VAR12
 
 VAR12_DF$VAR12 <- recode_factor(
   VAR12_DF$VAR12,
@@ -1032,7 +957,17 @@ VAR12_DF$VAR12 <- recode_factor(
 )
 
 
-ggplot(VAR12_DF, aes(x = name, fill = VAR12)) +
+VAR12_DF$VAR12_rev <- recode_factor(
+  VAR12_DF$VAR12_rev,
+  `6` = "Vid varje möjlighet",
+  `5` = "Dagligen",
+  `4` = "Varje vecka",
+  `3` = "Varje månad",
+  `2` = "Mindre än varje månad",
+  `1` = "Aldrig"
+)
+
+ggplot(VAR12_DF, aes(x = name, fill = VAR12_rev)) +
   geom_bar() +
   scale_x_discrete(labels = addToolCount(VAR12_DF)) +
   labs(
@@ -1045,25 +980,142 @@ ggplot(VAR12_DF, aes(x = name, fill = VAR12)) +
   coord_flip()
 
 # table
-table(VAR12_DF$name, VAR12_DF$VAR12)
+table(VAR12_DF$name, VAR12_DF$VAR12_rev)
 
 
 
 
 
 
+
+############# Weather ##########################
+
+# Den valda tekniken blir en större belastning att använda under: Starkt solsken. 
+VAR19_DF <- toLongDF(dataDF, "VAR19")
+VAR19_DF <- RecodeTech(VAR19_DF, "VAR19")
+VAR19_DF$VAR19 <- as.factor(VAR19_DF$VAR19)
+summary(VAR19_DF)
+
+ggplot(VAR19_DF, aes(x = VAR19)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Starkt solsken"
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Snö.
+VAR20_DF <- toLongDF(dataDF, "VAR20")
+VAR20_DF <- RecodeTech(VAR20_DF, "VAR20")
+VAR20_DF$VAR20 <- as.factor(VAR20_DF$VAR20)
+
+ggplot(VAR20_DF, aes(x = VAR20)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Snö."
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Kyla
+VAR21_DF <- toLongDF(dataDF, "VAR21")
+VAR21_DF <- RecodeTech(VAR21_DF, "VAR21")
+VAR21_DF$VAR21 <- as.factor(VAR21_DF$VAR21)
+
+ggplot(VAR21_DF, aes(x = VAR21)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Kyla"
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Regn
+VAR22_DF <- toLongDF(dataDF, "VAR22")
+VAR22_DF <- RecodeTech(VAR22_DF, "VAR22")
+VAR22_DF$VAR22 <- as.factor(VAR22_DF$VAR22)
+
+ggplot(VAR22_DF, aes(x = VAR22)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Regn"
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Mörker
+VAR23_DF <- toLongDF(dataDF, "VAR23")
+VAR23_DF <- RecodeTech(VAR23_DF, "VAR23")
+VAR23_DF$VAR23 <- as.factor(VAR23_DF$VAR23)
+
+ggplot(VAR23_DF, aes(x = VAR23)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Mörker"
+  ) +
+  theme_minimal() 
+
+# Den valda tekniken blir en större belastning att använda under: Dimma
+VAR24_DF <- toLongDF(dataDF, "VAR24")
+VAR24_DF <- RecodeTech(VAR24_DF, "VAR24")
+VAR24_DF$VAR24 <- as.factor(VAR24_DF$VAR24)
+
+ggplot(VAR24_DF, aes(x = VAR24)) +
+  facet_wrap(~name) +
+  geom_bar(fill = "#0072B2") +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under: Dimma"
+  ) +
+  theme_minimal() 
+
+
+# merge into 1 DF
+MergeDF1 <- merge(VAR24_DF, VAR23_DF, by = c("ID", "name", "VAR00", "VAR05"))
+MergeDF2 <- merge(MergeDF1, VAR22_DF, by = c("ID", "name", "VAR00", "VAR05"))
+MergeDF3 <- merge(MergeDF2, VAR21_DF, by = c("ID", "name", "VAR00", "VAR05"))
+MergeDF4 <- merge(MergeDF3, VAR20_DF, by = c("ID", "name", "VAR00", "VAR05"))
+MergeDF5 <- merge(MergeDF4, VAR19_DF, by = c("ID", "name", "VAR00", "VAR05"))
+MergeDF5 <- subset(MergeDF5, select = -c(VAR00,VAR05) )
+
+WeatherDF <- pivot_longer(MergeDF5, 
+                          cols = starts_with("VAR"), 
+                          names_to = "Weather", 
+                          values_to = "Belastning")
+
+WeatherDF <- WeatherDF |>
+  mutate(
+    Weather = recode(Weather, `VAR24` = "dimma", `VAR23` = "mörker", `VAR22` = "regn", `VAR21` = "kyla", `VAR20` = "snö", `VAR19` = "solsken", .default = NULL),
+  )
+
+
+ggplot(WeatherDF, aes(x = Belastning, fill=Weather)) +
+  facet_wrap(~name) +
+  geom_bar(position = 'dodge') +
+  labs(
+    y = "count",
+    title = "Den valda tekniken blir en större belastning att använda under"
+  ) +
+  theme_minimal() 
 
 ############## Usage - NASA relationship (with respect to weather) #############
 
 # usage frequency
 summary(VAR12_DF)
 
-ggplot(VAR12_DF, aes(x = VAR12)) +
+ggplot(VAR12_DF, aes(x = VAR12_rev)) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(VAR12_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
-    title = "Hur ofta använder du tekniska hjälpmedelet?"
+    title = "Hur ofta använder du tekniska hjälpmedelet?",
+    x = NULL
   ) +
   theme_minimal() +
   theme(
@@ -1092,7 +1144,7 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
 # correlation nasa tlx - usage
 nasa_usageDF <- merge(NASA_TLX_DF, VAR12_DF, by = c("ID", "name", "VAR00", "VAR05"), all = TRUE)
 
-ggplot(nasa_usageDF, aes(x = factor(VAR12), y = nasa_mean)) +
+ggplot(nasa_usageDF, aes(x = factor(VAR12_rev), y = nasa_mean)) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(nasa_usageDF))) +
   geom_boxplot(outlier.shape = NA) +
   labs(
@@ -1103,7 +1155,7 @@ ggplot(nasa_usageDF, aes(x = factor(VAR12), y = nasa_mean)) +
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 
-ggplot(nasa_usageDF, aes(x = factor(VAR12), y = nasa_mean)) +
+ggplot(nasa_usageDF, aes(x = factor(VAR12_rev), y = nasa_mean)) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(nasa_usageDF))) +
   geom_point() +
   labs(
@@ -1122,19 +1174,20 @@ ggplot(VAR19_DF, aes(x = VAR19)) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Starkt solsken"
+    title = "Den valda tekniken blir en större belastning att använda under: Starkt solsken",
+    y = NULL
   ) +
   theme_minimal() 
 
 # sun - usage
 weather1_usageDF <- merge(VAR19_DF, VAR12_DF, by = c("ID", "name", "VAR00", "VAR05"), all = TRUE)
 
-ggplot(weather1_usageDF, aes(x=VAR19, fill=factor(VAR12))) +
+ggplot(weather1_usageDF, aes(x=VAR19, fill=factor(VAR12_rev))) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(weather1_usageDF))) +
   geom_bar(na.rm = TRUE) +
   labs(
-    fill = "Use frequency",
-    x = "Difficulty in use",
+    fill = "Frekvens",
+    x = NULL,
     title = "Den valda tekniken blir en större belastning att använda under: Starkt solsken "
   )
 
@@ -1145,19 +1198,20 @@ ggplot(VAR20_DF, aes(x = VAR20)) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Snö."
+    title = "Den valda tekniken blir en större belastning att använda under: Snö.",
+    x = NULL
   ) +
   theme_minimal() 
 
 # snow - usage
 weather2_usageDF <- merge(weather1_usageDF, VAR20_DF, by = c("ID", "name", "VAR00", "VAR05"), all = TRUE)
 
-ggplot(weather2_usageDF, aes(x=VAR20, fill=factor(VAR12))) +
+ggplot(weather2_usageDF, aes(x=VAR20, fill=factor(VAR12_rev))) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(weather2_usageDF))) +
   geom_bar() +
   labs(
-    fill = "Use frequency",
-    x = "Difficulty in use",
+    fill = "Frekvens",
+    x = NULL,
     title = "Den valda tekniken blir en större belastning att använda under: Snö "
   )
 
@@ -1168,19 +1222,20 @@ ggplot(VAR21_DF, aes(x = VAR21)) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Kyla"
+    title = "Den valda tekniken blir en större belastning att använda under: Kyla",
+    x = NULL
   ) +
   theme_minimal() 
 
 # cold - usage
 weather3_usageDF <- merge(weather2_usageDF, VAR21_DF, by = c("ID", "name", "VAR00", "VAR05"), all = TRUE)
 
-ggplot(weather3_usageDF, aes(x=VAR21, fill=factor(VAR12))) +
+ggplot(weather3_usageDF, aes(x=VAR21, fill=factor(VAR12_rev))) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(weather3_usageDF))) +
   geom_bar() +
   labs(
-    fill = "Use frequency",
-    x = "Difficulty in use",
+    fill = "Frekvens",
+    x = NULL,
     title = "Den valda tekniken blir en större belastning att använda under: Kyla "
   )
 
@@ -1191,19 +1246,20 @@ ggplot(VAR22_DF, aes(x = VAR22)) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Regn"
+    title = "Den valda tekniken blir en större belastning att använda under: Regn",
+    x = NULL
   ) +
   theme_minimal()
 
 # rain - usage
 weather4_usageDF <- merge(weather3_usageDF, VAR22_DF, by = c("ID", "name", "VAR00", "VAR05"), all = TRUE)
 
-ggplot(weather4_usageDF, aes(x=VAR22, fill=VAR12)) +
+ggplot(weather4_usageDF, aes(x=VAR22, fill=VAR12_rev)) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(weather4_usageDF))) +
   geom_bar() +
   labs(
-    fill = "Use frequency",
-    x = "Difficulty in use",
+    fill = "Frekvens",
+    x = NULL,
     title = "Den valda tekniken blir en större belastning att använda under: Regn "
   )
 
@@ -1215,18 +1271,19 @@ ggplot(VAR23_DF, aes(x = VAR23)) +
   labs(
     y = "count",
     title = "Den valda tekniken blir en större belastning att använda under: Mörker"
+    x = NULL
   ) +
   theme_minimal() 
 
 # darkness - usage
 weather5_usageDF <- merge(weather4_usageDF, VAR23_DF, by = c("ID", "name", "VAR00", "VAR05"), all = TRUE)
 
-ggplot(weather5_usageDF, aes(x=VAR23, fill=VAR12)) +
+ggplot(weather5_usageDF, aes(x=VAR23, fill=VAR12_rev)) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(weather5_usageDF))) +
   geom_bar() +
   labs(
-    fill = "Use frequency",
-    x = "Difficulty in use",
+    fill = "Frekvens",
+    x = NULL,
     title = "Den valda tekniken blir en större belastning att använda under: Mörker "
   )
 
@@ -1237,23 +1294,24 @@ ggplot(VAR24_DF, aes(x = VAR24)) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Dimma"
+    title = "Den valda tekniken blir en större belastning att använda under: Dimma",
+    x =  NULL 
   ) +
   theme_minimal() 
 
 # dimma - usage
 weather6_usageDF <- merge(weather5_usageDF, VAR24_DF, by = c("ID", "name", "VAR00", "VAR05"), all = TRUE)
 
-ggplot(weather6_usageDF, aes(x=VAR24, fill=VAR12)) +
+ggplot(weather6_usageDF, aes(x=VAR24, fill=VAR12_rev)) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(weather6_usageDF))) +
   geom_bar() +
   labs(
-    fill = "Use frequency",
-    x = "Difficulty in use",
+    fill = "Frekvens",
+    x = NULL,
     title = "Den valda tekniken blir en större belastning att använda under: Dimma "
 )
 
-# weather - difficulty
+
 
 
 
