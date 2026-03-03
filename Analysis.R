@@ -6,7 +6,6 @@ library(stringr)
 library(tidyr)
 library(viridis)
 library(ggplot2)
-library(psych)
 
 
 
@@ -1270,7 +1269,7 @@ ggplot(VAR23_DF, aes(x = VAR23)) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
-    title = "Den valda tekniken blir en större belastning att använda under: Mörker"
+    title = "Den valda tekniken blir en större belastning att använda under: Mörker",
     x = NULL
   ) +
   theme_minimal() 
@@ -1312,13 +1311,214 @@ ggplot(weather6_usageDF, aes(x=VAR24, fill=VAR12_rev)) +
 )
 
 
+# merge usage x weather dfs
+long_weather_usage <- pivot_longer(weather6_usageDF, 
+                        cols = c(VAR19, VAR20, VAR21, VAR22, VAR23, VAR24), 
+                        names_to = "weather", 
+                        values_to = "weather_difficulty")
 
+long_weather_usage <- long_weather_usage %>%
+  mutate(
+    weather = recode(weather,
+                     "VAR19" = "sun",
+                     "VAR20" = "snow",
+                     "VAR21" = "cold",
+                     "VAR22" = "rain",
+                     "VAR23" = "darkness",
+                     "VAR24" = "fog")
+  )
 
+#ipad
+ipad_weatherDF <- subset(long_weather_usage, name == "iPad")
 
+ggplot(ipad_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "Frekvens",
+    x = NULL,
+    title = "iPad blir en större belastning att använda under:"
+  )
 
+#fingerscanner
+fingerscanner_weatherDF <- subset(long_weather_usage, name == "Fingerscanner")
 
+ggplot(fingerscanner_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "Frekvens",
+    x = NULL,
+    title = "Fingerscanner blir en större belastning att använda under:"
+  )
 
+#smartphone
+smartphone_weatherDF <- subset(long_weather_usage, name == "Smartphone")
 
+ggplot(smartphone_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "Frekvens",
+    x = NULL,
+    title = "Smartphone blir en större belastning att använda under:"
+  )
+
+# Stationär eller bärbar dator
+dator_weatherDF <- subset(long_weather_usage, name == "Stationär eller bärbar dator")
+
+ggplot(dator_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "Frekvens",
+    x = NULL,
+    title = "Stationär eller bärbar dator blir en större belastning att använda under:"
+  )
+
+# BRS
+brs_weatherDF <- subset(long_weather_usage, name == "BRS")
+
+ggplot(brs_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "Frekvens",
+    x = NULL,
+    title = "BRS blir en större belastning att använda under:"
+  )
+
+# Tankbil
+tankbil_weatherDF <- subset(long_weather_usage, name == "Tankbil")
+
+ggplot(tankbil_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "Frekvens",
+    x = NULL,
+    title = "Tankbil blir en större belastning att använda under:"
+  )
+
+# 	Power Stow
+powerstow_weatherDF <- subset(long_weather_usage, name == "Power Stow")
+
+ggplot(powerstow_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "Frekvens",
+    x = NULL,
+    title = "Power Stow blir en större belastning att använda under:"
+  )
+
+# De-icing bil
+deicing_weatherDF <- subset(long_weather_usage, name == "De-icing bil")
+
+ggplot(deicing_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "Frekvens",
+    x = NULL,
+    title = "De-icing bil blir en större belastning att använda under:"
+  )
+
+# Digitalisering (i allmänhet)
+Digitalisering_weatherDF <- subset(long_weather_usage, name == "Digitalisering (i allmänhet)")
+
+ggplot(Digitalisering_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "use frequency",
+    x = NULL,
+    title = "Digitalisering (i allmänhet) blir en större belastning att använda under:"
+  )
+
+# Lyfthjälpmedel
+lyft_weatherDF <- subset(long_weather_usage, name == "Lyfthjälpmedel")
+
+ggplot(lyft_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "use frequency",
+    x = NULL,
+    title = "Lyfthjälpmedel blir en större belastning att använda under:"
+  )
+
+# Bagagetransport
+bagage_weatherDF <- subset(long_weather_usage, name == "Bagagetransport")
+
+ggplot(bagage_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "use frequency",
+    x = NULL,
+    title = "Bagagetransport blir en större belastning att använda under:"
+  )
+
+# Pushback
+pushback_weatherDF <- subset(long_weather_usage, name == "Pushback")
+
+ggplot(pushback_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "use frequency",
+    x = NULL,
+    title = "Pushback blir en större belastning att använda under:"
+  )
+
+# Räddningsfordon
+radding_weatherDF <- subset(long_weather_usage, name == "Räddningsfordon")
+
+ggplot(radding_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "use frequency",
+    x = NULL,
+    title = "Räddningsfordon blir en större belastning att använda under:"
+  )
+
+# Water/Waste
+waste_weatherDF <- subset(long_weather_usage, name == "Water/Waste")
+
+ggplot(waste_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "use frequency",
+    x = NULL,
+    title = "Water/Waste blir en större belastning att använda under:"
+  )
+
+# lastband
+lastband_weatherDF <- subset(long_weather_usage, name == "Lastband")
+
+ggplot(lastband_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "use frequency",
+    x = NULL,
+    title = "Lastband blir en större belastning att använda under:"
+  )
+
+# gater
+gater_weatherDF <- subset(long_weather_usage, name == "Gater")
+
+ggplot(gater_weatherDF, aes(x=weather_difficulty, fill=VAR12_rev)) +
+  facet_wrap(~weather) +
+  geom_bar() +
+  labs(
+    fill = "use frequency",
+    x = NULL,
+    title = "Gater blir en större belastning att använda under:"
+  )
 
 
 
