@@ -1,4 +1,6 @@
+# install non standard packages. Uncomment if these are not yet installed on your pc
 #install.packages("psych")
+#install.packages("ltm")
 
 library(dplyr)
 library(purrr)
@@ -6,12 +8,14 @@ library(stringr)
 library(tidyr)
 library(viridis)
 library(ggplot2)
+library(psych)
+library(ltm)
 
 
 
 # read data - add data to folder called "data"
 dataDir <- getwd()
-dataDF <- read.csv(file.path(dataDir, "data\\Long_SurveyData2025-12-08.csv"), sep = ",")
+dataDF <- read.csv(file.path(dataDir, "data\\Long_SurveyData.csv"), sep = ",")
 
 # turn all colums to factors
 dataDF <- dataDF %>% mutate_if(is.character, as.factor)
@@ -192,7 +196,7 @@ addToolCount <- function(df){
 
 # turn to long df
 toLongDF <- function(df, var){
-  sub_df <- df %>% select(matches(var), ID, VAR05, VAR00)
+  sub_df <- df %>% dplyr::select(dplyr::matches(var), ID, VAR05, VAR00)
   # trn to long
   long_df <- sub_df %>%
     pivot_longer(
@@ -205,6 +209,19 @@ toLongDF <- function(df, var){
   return(long_df)
 }
 
+toLongDF <- function(df, var){
+  sub_df <- df %>%
+    dplyr::select(dplyr::matches(var), ID, VAR05, VAR00)
+  long_df <- sub_df %>%
+    pivot_longer(
+      cols = matches(var),
+      names_to = "name",
+      values_to = var,
+      values_drop_na = TRUE
+    ) %>%
+    distinct(ID, name, .keep_all = TRUE)
+  return(long_df)
+}
 
 ########### Tech #############
 
@@ -452,102 +469,148 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
 # Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?
 VAR25_DF <- toLongDF(dataDF, "VAR25")
 VAR25_DF <- RecodeTech(VAR25_DF, "VAR25")
+VAR25_DF <- rename(VAR25_DF, "VAR25_36" = "VAR25")
+# Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?
+VAR36_DF <- toLongDF(dataDF, "VAR36")
+VAR36_DF <- RecodeTech(VAR36_DF, "VAR36")
+VAR36_DF <- rename(VAR36_DF, "VAR25_36" = "VAR36")
+
+VAR25_36_DF <- rbind(VAR36_DF, VAR25_DF)
 
 # Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
 VAR26_DF <- toLongDF(dataDF, "VAR26")
 VAR26_DF <- RecodeTech(VAR26_DF, "VAR26")
+VAR26_DF <- rename(VAR26_DF, "VAR26_37" = "VAR26")
+# Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken? 
+VAR37_DF <- toLongDF(dataDF, "VAR37")
+VAR37_DF <- RecodeTech(VAR37_DF, "VAR37")
+VAR37_DF <- rename(VAR37_DF, "VAR26_37" = "VAR37")
 
-# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? 
-VAR27_DF <- toLongDF(dataDF, "VAR27")
-VAR27_DF <- RecodeTech(VAR27_DF, "VAR27")
-
-# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?
-VAR28_DF <- toLongDF(dataDF, "VAR28")
-VAR28_DF <- RecodeTech(VAR28_DF, "VAR28")
+VAR26_37_DF <- rbind(VAR37_DF, VAR26_DF)
 
 # Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
 VAR29_DF <- toLongDF(dataDF, "VAR29")
 VAR29_DF <- RecodeTech(VAR29_DF, "VAR29")
-
-# Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?
-VAR30_DF <- toLongDF(dataDF, "VAR30")
-VAR30_DF <- RecodeTech(VAR30_DF, "VAR30")
-
-# Har arbetsmiljö varit ett fokus när den valda tekniken har införts?
-VAR31_DF <- toLongDF(dataDF, "VAR31")
-VAR31_DF <- RecodeTech(VAR31_DF, "VAR31")
-
-# Genomfördes en riskanalys innan den valda tekniken infördes? 
-VAR32_DF <- toLongDF(dataDF, "VAR32")
-VAR32_DF <- RecodeTech(VAR32_DF, "VAR32")
-
-# Har någon av dina kollegor medverkat i något utvecklingsarbete? 
-VAR33_DF <- toLongDF(dataDF, "VAR33")
-VAR33_DF <- RecodeTech(VAR33_DF, "VAR33")
-
-# Vet du hur du ska gå till väga om du har synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? 
-VAR34_DF <- toLongDF(dataDF, "VAR34")
-VAR34_DF <- RecodeTech(VAR34_DF, "VAR34")
-
-# Har du upplevt att det har varit tydligt varför den valda tekniken har införts?
-VAR35_DF <- toLongDF(dataDF, "VAR35")
-VAR35_DF <- RecodeTech(VAR35_DF, "VAR35")
-
-# Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?
-VAR36_DF <- toLongDF(dataDF, "VAR36")
-VAR36_DF <- RecodeTech(VAR36_DF, "VAR36")
-
-# Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken? 
-VAR37_DF <- toLongDF(dataDF, "VAR37")
-VAR37_DF <- RecodeTech(VAR37_DF, "VAR37")
-
-# Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? 
-VAR38_DF <- toLongDF(dataDF, "VAR38")
-VAR38_DF <- RecodeTech(VAR38_DF, "VAR38")
-
-# Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? 
-VAR39_DF <- toLongDF(dataDF, "VAR39")
-VAR39_DF <- RecodeTech(VAR39_DF, "VAR39")
-
+VAR29_DF <- rename(VAR29_DF, "VAR29_40" = "VAR29")
 # Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
 VAR40_DF <- toLongDF(dataDF, "VAR40")
 VAR40_DF <- RecodeTech(VAR40_DF, "VAR40")
+VAR40_DF <- rename(VAR40_DF, "VAR29_40" = "VAR40")
+
+VAR29_40_DF <- rbind(VAR40_DF, VAR29_DF)
 
 # Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken? 
 VAR41_DF <- toLongDF(dataDF, "VAR41")
 VAR41_DF <- RecodeTech(VAR41_DF, "VAR41")
+VAR41_DF <- rename(VAR41_DF, "VAR30_41" = "VAR41")
+# Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?
+VAR30_DF <- toLongDF(dataDF, "VAR30")
+VAR30_DF <- RecodeTech(VAR30_DF, "VAR30")
+VAR30_DF <- rename(VAR30_DF, "VAR30_41" = "VAR30")
 
+VAR30_41_DF <- rbind(VAR41_DF, VAR30_DF)
+
+# Har arbetsmiljö varit ett fokus när den valda tekniken har införts?
+VAR31_DF <- toLongDF(dataDF, "VAR31")
+VAR31_DF <- RecodeTech(VAR31_DF, "VAR31")
+VAR31_DF <- rename(VAR31_DF, "VAR31_42" = "VAR31")
 # Har arbetsmiljö varit ett fokus när den valda tekniken har införts? 
 VAR42_DF <- toLongDF(dataDF, "VAR42")
 VAR42_DF <- RecodeTech(VAR42_DF, "VAR42")
+VAR42_DF <- rename(VAR42_DF, "VAR31_42" = "VAR42")
 
+VAR31_42_DF <- rbind(VAR42_DF, VAR31_DF)
+
+# Genomfördes en riskanalys innan den valda tekniken infördes? 
+VAR32_DF <- toLongDF(dataDF, "VAR32")
+VAR32_DF <- RecodeTech(VAR32_DF, "VAR32")
+VAR32_DF <- rename(VAR32_DF, "VAR43_32" = "VAR32")
 # Genomfördes en riskanalys innan den valda tekniken infördes? 
 VAR43_DF <- toLongDF(dataDF, "VAR43")
 VAR43_DF <- RecodeTech(VAR43_DF, "VAR43")
+VAR43_DF <- rename(VAR43_DF, "VAR43_32" = "VAR43")
 
-# # Har någon av dina kollegor medverkat i något utvecklingsarbete? 
+VAR32_43_DF <- rbind(VAR43_DF, VAR32_DF)
+
+# Har någon av dina kollegor medverkat i något utvecklingsarbete? 
+VAR33_DF <- toLongDF(dataDF, "VAR33")
+VAR33_DF <- RecodeTech(VAR33_DF, "VAR33")
+VAR33_DF <- rename(VAR33_DF, "VAR44_33" = "VAR33")
+# Har någon av dina kollegor medverkat i något utvecklingsarbete? 
 VAR44_DF <- toLongDF(dataDF, "VAR44")
 VAR44_DF <- RecodeTech(VAR44_DF, "VAR44")
+VAR44_DF <- rename(VAR44_DF, "VAR44_33" = "VAR44")
 
-# Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken?
-VAR45_DF <- toLongDF(dataDF, "VAR45")
-VAR45_DF <- RecodeTech(VAR45_DF, "VAR45")
+VAR33_44_DF <- rbind(VAR44_DF, VAR33_DF)
 
+# Har du upplevt att det har varit tydligt varför den valda tekniken har införts?
+VAR35_DF <- toLongDF(dataDF, "VAR35")
+VAR35_DF <- RecodeTech(VAR35_DF, "VAR35")
+VAR35_DF <- rename(VAR35_DF, "VAR46_35" = "VAR35")
 # Har du upplevt att det har varit tydligt varför den valda tekniken har införts?
 VAR46_DF <- toLongDF(dataDF, "VAR46")
 VAR46_DF <- RecodeTech(VAR46_DF, "VAR46")
+VAR46_DF <- rename(VAR46_DF, "VAR46_35" = "VAR46")
+
+VAR35_46_DF <- rbind(VAR46_DF, VAR35_DF)
+
+# Vet du hur du ska gå till väga om du har synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? 
+VAR34_DF <- toLongDF(dataDF, "VAR34")
+VAR34_DF <- RecodeTech(VAR34_DF, "VAR34")
+VAR34_DF <- rename(VAR34_DF, "VAR45_34" = "VAR34")
+# Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken?
+VAR45_DF <- toLongDF(dataDF, "VAR45")
+VAR45_DF <- RecodeTech(VAR45_DF, "VAR45")
+VAR45_DF <- rename(VAR45_DF, "VAR45_34" = "VAR45")
+
+VAR34_45_DF <- rbind(VAR45_DF, VAR34_DF)
+
+# Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? 
+VAR38_DF <- toLongDF(dataDF, "VAR38")
+VAR38_DF <- RecodeTech(VAR38_DF, "VAR38")
+VAR38_DF <- rename(VAR38_DF, "VAR27_38" = "VAR38")
+# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? 
+VAR27_DF <- toLongDF(dataDF, "VAR27")
+VAR27_DF <- RecodeTech(VAR27_DF, "VAR27")
+VAR27_DF <- rename(VAR27_DF, "VAR27_38" = "VAR27")
+
+VAR38_27_DF <- rbind(VAR38_DF, VAR27_DF)
+
+# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?
+VAR28_DF <- toLongDF(dataDF, "VAR28")
+VAR28_DF <- RecodeTech(VAR28_DF, "VAR28")
+VAR28_DF <- rename(VAR28_DF, "VAR28_39" = "VAR28")
+# Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? 
+VAR39_DF <- toLongDF(dataDF, "VAR39")
+VAR39_DF <- RecodeTech(VAR39_DF, "VAR39")
+VAR39_DF <- rename(VAR39_DF, "VAR28_39" = "VAR39")
+
+VAR28_39_DF <- rbind(VAR28_DF, VAR39_DF)
 
 # combine dfs and scores
-involvementDF <- Reduce(function(x, y) merge(x, y, all=TRUE), list(VAR44_DF, VAR45_DF, VAR46_DF, VAR43_DF, VAR42_DF, 
-                                                                   VAR41_DF, VAR40_DF, VAR39_DF, VAR38_DF, VAR37_DF,
-                                                                   VAR36_DF, VAR35_DF, VAR34_DF, VAR33_DF, VAR32_DF, 
-                                                                   VAR31_DF, VAR30_DF, VAR29_DF, VAR28_DF, VAR27_DF, 
-                                                                   VAR26_DF, VAR25_DF))
+involvementDF <- list(VAR28_39_DF, VAR38_27_DF, VAR34_45_DF, VAR25_36_DF, VAR26_37_DF,
+                      VAR29_40_DF, VAR30_41_DF, VAR31_42_DF, VAR32_43_DF, VAR33_44_DF, 
+                      VAR35_46_DF) %>%
+  reduce(dplyr::full_join, by = c("ID","name","VAR00","VAR05"))
+
+
+
+head(involvementDF)
+
+# check internal consistency of items - Cronbach’s alpha
+involvementDF_check <- involvementDF %>%
+  dplyr::select(VAR28_39:VAR46_35)
+
+cronbach.alpha(involvementDF_check)
+# Items: 11
+# Sample units: 721
+# alpha: 0.917
+
 # add mean and median
-involvementDF$mean <- rowMeans(involvementDF[ , 5:26], na.rm=TRUE)
+involvementDF$mean <- rowMeans(involvementDF[ , 5:15], na.rm=TRUE)
 involvementDF <- involvementDF %>%
   rowwise() %>%
-  mutate(rMedian = median(c_across(5:26), na.rm = TRUE)) %>%
+  mutate(rMedian = median(c_across(5:15), na.rm = TRUE)) %>%
   ungroup()
 
 # to factor
@@ -574,6 +637,7 @@ VAR27_DF$VAR27 <- as.factor(VAR27_DF$VAR27)
 VAR26_DF$VAR26 <- as.factor(VAR26_DF$VAR26)
 VAR25_DF$VAR25 <- as.factor(VAR25_DF$VAR25)
 
+
 # plots - median for airport size
 ggplot(involvementDF, aes(x = rMedian, fill = VAR05)) +
   facet_wrap(~name) +
@@ -597,7 +661,7 @@ ggplot(involvementDF, aes(x = rMedian, fill = VAR00)) +
   theme_minimal() 
 
 
-# VAR25 
+# VAR25 - need redoing
 ggplot(VAR25_DF, aes(x = VAR25, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
@@ -853,6 +917,8 @@ ggplot(VAR46_DF, aes(x = VAR46, fill = VAR05)) +
     title = "Har du upplevt att det har varit tydligt varför den valda tekniken har införts? "
   ) +
   theme_minimal() 
+
+
 
 
 # differences between roles?

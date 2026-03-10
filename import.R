@@ -7,7 +7,7 @@ library(viridis)
 
 # read data - add data to folder called "data"
 dataDir <- getwd()
-dataDF <- read.csv(file.path(dataDir, "data\\SurveyData2025-12-08.csv"), sep = ";")
+dataDF <- read.csv(file.path(dataDir, "data\\SurveyData.csv"), sep = ";")
 
 
 
@@ -219,7 +219,7 @@ toLongDF <- function(df, var){
 
 ############ Export DF ###################
 
-write.csv(dataDF, file.path(dataDir, "data\\Long_SurveyData2025-12-08.csv"))
+write.csv(dataDF, file.path(dataDir, "data\\Long_SurveyData.csv"))
 
 
 
