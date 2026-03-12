@@ -649,6 +649,16 @@ ggplot(involvementDF, aes(x = rMedian, fill = VAR05)) +
   ) +
   theme_minimal() 
 
+ggplot(involvementDF, aes(x = factor(rMedian), fill = VAR05)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Median engagemang",
+    y = "Proportion",
+    fill = "Roll"
+  ) +
+  theme_minimal()
+
+
 # median staff vs manager
 ggplot(involvementDF, aes(x = rMedian, fill = VAR00)) +
   facet_wrap(~name) +
@@ -660,261 +670,143 @@ ggplot(involvementDF, aes(x = rMedian, fill = VAR00)) +
   ) +
   theme_minimal() 
 
+ggplot(involvementDF, aes(x = factor(rMedian), fill = VAR00)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Median engagemang",
+    y = "Proportion",
+    fill = "Roll"
+  ) +
+  theme_minimal()
 
-# VAR25 - need redoing
-ggplot(VAR25_DF, aes(x = VAR25, fill = VAR05)) +
+# VAR25_36
+ggplot(involvementDF, aes(x = VAR25_36, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     y = "count",
     x = NULL,
     fill = "Storlek flygplatsen",
-    title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
+    title = "VAR25_36"
   ) +
   theme_minimal() 
 
-# VAR26 - Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
-ggplot(VAR26_DF, aes(x = VAR26, fill = VAR05)) +
+# VAR26_37 
+ggplot(involvementDF, aes(x = VAR26_37, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     y = "count",
     x = NULL,
-    title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?"
+    title = "VAR26_37"
   ) +
   theme_minimal() 
 
-# VAR27 - Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet?
-ggplot(VAR27_DF, aes(x = VAR27, fill = VAR05)) +
+# VAR27_38
+ggplot(involvementDF, aes(x = VAR27_38, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     y = "count",
-    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? ",
+    title = "VAR27_38",
     x = NULL
   ) +
   theme_minimal() 
 
-# VAR28 - Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?
-ggplot(VAR28_DF, aes(x = VAR28, fill = VAR05)) +
+# VAR28_39
+ggplot(involvementDF, aes(x = VAR28_39, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     y = "count",
     x = NULL,
-    title = "Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?"
+    title = "VAR28_39"
   ) +
   theme_minimal() 
 
-# VAR29 - Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet? 
-ggplot(VAR29_DF, aes(x = VAR29, fill = VAR05)) +
+# VAR29_40
+ggplot(involvementDF, aes(x = VAR29_40, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?"
+    title = "VAR29_40"
   ) +
   theme_minimal() 
 
-# VAR30 - Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?
-ggplot(VAR30_DF, aes(x = VAR30, fill = VAR05)) +
+# VAR30_41 
+ggplot(involvementDF, aes(x = VAR30_41, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?"
+    title = "VAR30_41"
   ) +
   theme_minimal() 
 
-ggplot(VAR31_DF, aes(x = VAR31, fill = VAR05)) +
+ggplot(involvementDF, aes(x = VAR31_42, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "Har arbetsmiljö varit ett fokus när den valda tekniken har införts?"
+    title = "VAR31_42"
   ) +
   theme_minimal() 
 
-ggplot(VAR32_DF, aes(x = VAR32, fill = VAR05)) +
+# VAR43_32
+ggplot(involvementDF, aes(x = VAR43_32, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "Genomfördes en riskanalys innan den valda tekniken infördes? "
+    title = "VAR43_32 "
   ) +
   theme_minimal() 
 
 # VAR33 - Har någon av dina kollegor medverkat i något utvecklingsarbete? 
-ggplot(VAR33_DF, aes(x = VAR33, fill = VAR05)) +
+ggplot(involvementDF, aes(x = VAR44_33, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "Har någon av dina kollegor medverkat i något utvecklingsarbete?  "
+    title = "VAR33_44 "
   ) +
   theme_minimal() 
 
-ggplot(VAR34_DF, aes(x = VAR34, fill = VAR05)) +
+# VAR45_34
+ggplot(involvementDF, aes(x = VAR45_34, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "Vet du hur du ska gå till väga om du har synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? "
+    title = "VAR45_34"
   ) +
   theme_minimal() 
 
-ggplot(VAR35_DF, aes(x = VAR35, fill = VAR05)) +
+# VAR46_35
+ggplot(involvementDF, aes(x = VAR46_35, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "Har du upplevt att det har varit tydligt varför den valda tekniken har införts?"
-  ) +
-  theme_minimal() 
-
-# VAR36 - Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?
-ggplot(VAR36_DF, aes(x = VAR36, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Har du medverkat i arbetet för att utveckla, eller förbättra arbetssättet där den valda tekniken har införts som ett hjälpmedel?"
-  ) +
-  theme_minimal() 
-
-# VAR37 - Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken?
-ggplot(VAR37_DF, aes(x = VAR37, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Har du medverkat i arbetet för att utveckla, införa eller förbättra den valda tekniken? "
-  ) +
-  theme_minimal() 
-
-# VAR38 - Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? 
-ggplot(VAR38_DF, aes(x = VAR38, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? "
-  ) +
-  theme_minimal() 
-
-# VAR39 - Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken?
-ggplot(VAR39_DF, aes(x = VAR39, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? "
-  ) +
-  theme_minimal() 
-
-# VAR40 - Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
-ggplot(VAR40_DF, aes(x = VAR40, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet? "
-  ) +
-  theme_minimal() 
-
-# VAR41 - Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?
-ggplot(VAR41_DF, aes(x = VAR41, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Upplever du att dina synpunkter har påverkat utvecklingen av den valda tekniken?  "
-  ) +
-  theme_minimal() 
-
-ggplot(VAR42_DF, aes(x = VAR42, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Har arbetsmiljö varit ett fokus när den valda tekniken har införts? "
-  ) +
-  theme_minimal() 
-
-ggplot(VAR43_DF, aes(x = VAR43, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Genomfördes en riskanalys innan den valda tekniken infördes?"
-  ) +
-  theme_minimal() 
-
-# VAR44 - Har någon av dina kollegor medverkat i något utvecklingsarbete?
-ggplot(VAR44_DF, aes(x = VAR44, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Har någon av dina kollegor medverkat i något utvecklingsarbete? "
-  ) +
-  theme_minimal() 
-
-# VAR45 - Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken?
-ggplot(VAR45_DF, aes(x = VAR45, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Har berörd personal fått möjlighet att framföra synpunkter eller önskemål om förbättringar som gäller arbetssättet eller den valda tekniken? "
-  ) +
-  theme_minimal() 
-
-ggplot(VAR46_DF, aes(x = VAR46, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
-  labs(
-    fill = "Storlek flygplatsen",
-    x = NULL,
-    y = "count",
-    title = "Har du upplevt att det har varit tydligt varför den valda tekniken har införts? "
+    title = "VAR46_35"
   ) +
   theme_minimal() 
 
