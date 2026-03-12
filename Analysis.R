@@ -615,28 +615,6 @@ involvementDF <- involvementDF %>%
 
 # to factor
 involvementDF$rMedian <- as.factor(involvementDF$rMedian)
-VAR45_DF$VAR45 <- as.factor(VAR45_DF$VAR45)
-VAR44_DF$VAR44 <- as.factor(VAR44_DF$VAR44)
-VAR43_DF$VAR43 <- as.factor(VAR43_DF$VAR43)
-VAR42_DF$VAR42 <- as.factor(VAR42_DF$VAR42)
-VAR41_DF$VAR41 <- as.factor(VAR41_DF$VAR41)
-VAR40_DF$VAR40 <- as.factor(VAR40_DF$VAR40)
-VAR39_DF$VAR39 <- as.factor(VAR39_DF$VAR39)
-VAR38_DF$VAR38 <- as.factor(VAR38_DF$VAR38)
-VAR37_DF$VAR37 <- as.factor(VAR37_DF$VAR37)
-VAR36_DF$VAR36 <- as.factor(VAR36_DF$VAR36)
-VAR35_DF$VAR35 <- as.factor(VAR35_DF$VAR35)
-VAR34_DF$VAR34 <- as.factor(VAR34_DF$VAR34)
-VAR33_DF$VAR33 <- as.factor(VAR33_DF$VAR33)
-VAR32_DF$VAR32 <- as.factor(VAR32_DF$VAR32)
-VAR31_DF$VAR31 <- as.factor(VAR31_DF$VAR31)
-VAR30_DF$VAR30 <- as.factor(VAR30_DF$VAR30)
-VAR29_DF$VAR29 <- as.factor(VAR29_DF$VAR29)
-VAR28_DF$VAR28 <- as.factor(VAR28_DF$VAR28)
-VAR27_DF$VAR27 <- as.factor(VAR27_DF$VAR27)
-VAR26_DF$VAR26 <- as.factor(VAR26_DF$VAR26)
-VAR25_DF$VAR25 <- as.factor(VAR25_DF$VAR25)
-
 
 # plots - median for airport size
 ggplot(involvementDF, aes(x = rMedian, fill = VAR05)) +
@@ -866,6 +844,9 @@ nasa_involvementDF <- merge(involvementDF, NASA_TLX_DF, by = c("ID", "name", "VA
 
 ggplot(nasa_involvementDF, aes(mean, nasa_mean)) +
   geom_point() +
+  stat_smooth(method = "lm",
+              formula = y ~ x,
+              geom = "smooth")+
   labs(
     y = "NASA TLX",
     x = "Mean engagemang"
@@ -1101,33 +1082,19 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
 # correlation nasa tlx - usage
 nasa_usageDF <- merge(NASA_TLX_DF, VAR12_DF, by = c("ID", "name", "VAR00", "VAR05"), all = TRUE)
 
-ggplot(nasa_usageDF, aes(x = factor(VAR12_rev), y = nasa_mean)) +
+ggplot(nasa_usageDF, aes(y = factor(VAR12_rev), x = nasa_mean)) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(nasa_usageDF))) +
   geom_boxplot(outlier.shape = NA) +
   labs(
-    x = "Hur ofta använder du tekniska hjälpmedelet?",
-    y = "NASA TLX"
-  ) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
-
-ggplot(nasa_usageDF, aes(x = factor(VAR12_rev), y = nasa_mean)) +
-  facet_wrap(~name, labeller = labeller(name = addToolCount(nasa_usageDF))) +
-  geom_point() +
-  labs(
-    x = "Hur ofta använder du tekniska hjälpmedelet?",
-    y = "NASA TLX"
-  ) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
+    y = "Hur ofta använder du tekniska hjälpmedelet?",
+    x = "NASA TLX"
+  ) 
 
 
 # weather
 # sun
 ggplot(VAR19_DF, aes(x = VAR19)) +
-  facet_wrap(~name, , labeller = labeller(name = addToolCount(VAR19_DF))) +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(VAR19_DF))) +
   geom_bar(fill = "#0072B2") +
   labs(
     y = "count",
