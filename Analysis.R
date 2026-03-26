@@ -21,7 +21,7 @@ dataDF <- read.csv(file.path(dataDir, "data\\Long_SurveyData.csv"), sep = ",")
 dataDF <- dataDF %>% mutate_if(is.character, as.factor)
 dataDF$ID <- as.factor(dataDF$ID)
 
-summary(dataDF$ID)
+summary(dataDF)
 
 # recode 0 to NA
 #dataDF[dataDF == 0] <- NA
@@ -31,9 +31,15 @@ summary(dataDF$ID)
 # get people's roles
 summary(dataDF$VAR00)
 
+# get num participants
+length(unique(dataDF$ID))
+
 # Compute counts per role, unique ID
 role_counts <- dataDF %>%
   count(VAR00)
+
+# gender
+summary(dataDF$VAR04)
 
 # Plot
 ggplot(dataDF, aes(x = VAR00, fill = VAR04)) +
@@ -488,6 +494,28 @@ VAR37_DF <- rename(VAR37_DF, "VAR26_37" = "VAR37")
 
 VAR26_37_DF <- rbind(VAR37_DF, VAR26_DF)
 
+# Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? 
+VAR38_DF <- toLongDF(dataDF, "VAR38")
+VAR38_DF <- RecodeTech(VAR38_DF, "VAR38")
+VAR38_DF <- rename(VAR38_DF, "VAR27_38" = "VAR38")
+# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? 
+VAR27_DF <- toLongDF(dataDF, "VAR27")
+VAR27_DF <- RecodeTech(VAR27_DF, "VAR27")
+VAR27_DF <- rename(VAR27_DF, "VAR27_38" = "VAR27")
+
+VAR38_27_DF <- rbind(VAR38_DF, VAR27_DF)
+
+# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?
+VAR28_DF <- toLongDF(dataDF, "VAR28")
+VAR28_DF <- RecodeTech(VAR28_DF, "VAR28")
+VAR28_DF <- rename(VAR28_DF, "VAR28_39" = "VAR28")
+# Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? 
+VAR39_DF <- toLongDF(dataDF, "VAR39")
+VAR39_DF <- RecodeTech(VAR39_DF, "VAR39")
+VAR39_DF <- rename(VAR39_DF, "VAR28_39" = "VAR39")
+
+VAR28_39_DF <- rbind(VAR28_DF, VAR39_DF)
+
 # Upplever du att dina synpunkter har påverkat utvecklingen av arbetssättet?
 VAR29_DF <- toLongDF(dataDF, "VAR29")
 VAR29_DF <- RecodeTech(VAR29_DF, "VAR29")
@@ -565,35 +593,13 @@ VAR45_DF <- rename(VAR45_DF, "VAR45_34" = "VAR45")
 
 VAR34_45_DF <- rbind(VAR45_DF, VAR34_DF)
 
-# Har du gett stöd, utbildning, information, tid, osv. till den personal som ska använda den valda tekniken för att medverka i utvecklingsarbetet av arbetssättet? 
-VAR38_DF <- toLongDF(dataDF, "VAR38")
-VAR38_DF <- RecodeTech(VAR38_DF, "VAR38")
-VAR38_DF <- rename(VAR38_DF, "VAR27_38" = "VAR38")
-# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av arbetssättet? 
-VAR27_DF <- toLongDF(dataDF, "VAR27")
-VAR27_DF <- RecodeTech(VAR27_DF, "VAR27")
-VAR27_DF <- rename(VAR27_DF, "VAR27_38" = "VAR27")
 
-VAR38_27_DF <- rbind(VAR38_DF, VAR27_DF)
-
-# Har du fått stöd, utbildning, information, tid, osv. för att medverka i utvecklingsarbetet av den valda tekniken?
-VAR28_DF <- toLongDF(dataDF, "VAR28")
-VAR28_DF <- RecodeTech(VAR28_DF, "VAR28")
-VAR28_DF <- rename(VAR28_DF, "VAR28_39" = "VAR28")
-# Har gett stöd, utbildning, information, tid, osv. till den berörda personalen för att medverka i utvecklingsarbetet av den valda tekniken? 
-VAR39_DF <- toLongDF(dataDF, "VAR39")
-VAR39_DF <- RecodeTech(VAR39_DF, "VAR39")
-VAR39_DF <- rename(VAR39_DF, "VAR28_39" = "VAR39")
-
-VAR28_39_DF <- rbind(VAR28_DF, VAR39_DF)
 
 # combine dfs and scores
-involvementDF <- list(VAR28_39_DF, VAR38_27_DF, VAR34_45_DF, VAR25_36_DF, VAR26_37_DF,
-                      VAR29_40_DF, VAR30_41_DF, VAR31_42_DF, VAR32_43_DF, VAR33_44_DF, 
+involvementDF <- list(VAR25_36_DF, VAR26_37_DF, VAR38_27_DF, VAR28_39_DF, VAR29_40_DF,  
+                      VAR30_41_DF, VAR31_42_DF, VAR32_43_DF, VAR33_44_DF, VAR34_45_DF,
                       VAR35_46_DF) %>%
   reduce(dplyr::full_join, by = c("ID","name","VAR00","VAR05"))
-
-
 
 head(involvementDF)
 
@@ -606,12 +612,67 @@ cronbach.alpha(involvementDF_check)
 # Sample units: 721
 # alpha: 0.917
 
+# rename vars
+involvementDF <- involvementDF %>%
+  rename(
+    Participation = VAR25_36,
+    `Way of work` = VAR26_37,
+    `Offer Implement` = VAR27_38,
+    `Offer way of work` = VAR28_39,
+    `Opinions affect imp.` = VAR29_40,
+    `Opinions affect work` = VAR30_41,
+    `Work environment focus` = VAR31_42,
+    `Risk analysis` = VAR43_32,
+    `Colleague Involved` = VAR44_33,
+    `Where to turn` = VAR45_34,
+    `Why implementation` = VAR46_35
+  )
+
+# mean per column
+involvement_summary <- involvementDF %>%
+  group_by(VAR00) %>%
+  summarise(
+    n = n(),
+    across(
+      where(is.numeric),
+      list(
+        mean = ~mean(.x, na.rm = TRUE),
+        sd   = ~sd(.x, na.rm = TRUE)
+      ),
+      .names = "{.col}_{.fn}"
+    ),
+    .groups = "drop"
+  )
+
+# mean across items
+total_stats <- involvementDF %>%
+  group_by(VAR00) %>%
+  summarise(
+    total_mean = mean(unlist(across(where(is.numeric))), na.rm = TRUE),
+    total_sd   = sd(unlist(across(where(is.numeric))), na.rm = TRUE),
+    .groups = "drop"
+  )
+
+summary(involvementDF)
+
+
 # add mean and median
 involvementDF$mean <- rowMeans(involvementDF[ , 5:15], na.rm=TRUE)
 involvementDF <- involvementDF %>%
   rowwise() %>%
   mutate(rMedian = median(c_across(5:15), na.rm = TRUE)) %>%
   ungroup()
+
+
+# plot mean
+ggplot(involvementDF, aes(y=mean, fill = VAR00)) +
+  geom_boxplot() +
+  labs(
+    fill = "Role",
+    title = "Total involvement"
+  )
+
+
 
 # to factor
 involvementDF$rMedian <- as.factor(involvementDF$rMedian)
