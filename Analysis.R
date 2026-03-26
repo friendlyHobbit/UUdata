@@ -6,7 +6,7 @@ library(dplyr)
 library(purrr)
 library(stringr)
 library(tidyr)
-library(viridis)
+#library(viridis)
 library(ggplot2)
 library(psych)
 library(ltm)
@@ -404,7 +404,7 @@ ggplot(NASA_TLX_DF, aes(x=VAR15)) +
   labs(
     x = "Tidsmässig belastning",
     y = "Count",
-    title = "tekniska hjälpmedlen i ditt arbete?"
+    title = " I vilken utsträckning upplever du att de tekniska hjälpmedlen bidrar till tidspress?"
   ) 
 
 # VAR16
@@ -454,7 +454,7 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
 ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
   geom_boxplot(outlier.shape = NA) +
   scale_x_discrete(labels = addToolCount(NASA_TLX_DF)) +
-  geom_jitter(width = 0.2) +
+  geom_jitter(width = 0.25, alpha = 0.5) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
   ) +
@@ -616,46 +616,66 @@ involvementDF <- involvementDF %>%
 # to factor
 involvementDF$rMedian <- as.factor(involvementDF$rMedian)
 
+# change Labels for the x-axis
+involvementDF$rMedian <- recode_factor(
+  involvementDF$rMedian,
+  `0` = "Vet ej",
+  `1` = "Inte alls",
+  `2` = "I liten utsträckning",
+  `3` = "I viss utsträckning",
+  `4` = "I stor utsträckning",
+  `5` = "I mycket stor utsträckning"
+)
+
 # plots - median for airport size
 ggplot(involvementDF, aes(x = rMedian, fill = VAR05)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(involvementDF))) +
+  geom_bar(position = "dodge") +
   labs(
-    y = "count",
-    x = "Median engagemang",
-    fill = "Storlek flygplatsen"
+    y = "Count",
+    x = "Involvement (Median)",
+    fill = "Aiport size"
   ) +
-  theme_minimal() 
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 ggplot(involvementDF, aes(x = factor(rMedian), fill = VAR05)) +
   geom_bar(position = "fill") +
   labs(
-    x = "Median engagemang",
+    x = "Involvement (median)",
     y = "Proportion",
-    fill = "Roll"
+    fill = "Aiport size"
   ) +
-  theme_minimal()
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 
 # median staff vs manager
 ggplot(involvementDF, aes(x = rMedian, fill = VAR00)) +
-  facet_wrap(~name) +
-  geom_bar(position = "stack") +
+  facet_wrap(~name, labeller = labeller(name = addToolCount(involvementDF))) +
+  geom_bar(position = "dodge", stat = "count", binwidth = 0.1) +
   labs(
     y = "count",
-    x = "Median engagemang",
-    fill = "Roll"
+    x = "Involvement (median)",
+    fill = "Role"
   ) +
-  theme_minimal() 
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 ggplot(involvementDF, aes(x = factor(rMedian), fill = VAR00)) +
   geom_bar(position = "fill") +
   labs(
-    x = "Median engagemang",
+    x = "Median involvement",
     y = "Proportion",
-    fill = "Roll"
+    fill = "Role"
   ) +
-  theme_minimal()
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
 
 # VAR25_36
 ggplot(involvementDF, aes(x = VAR25_36, fill = VAR05)) +
@@ -836,6 +856,11 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
   geom_boxplot(outlier.shape = NA) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  scale_x_discrete(labels = addToolCount(NASA_TLX_DF)) +
+  labs(
+    y = "NASA TLX",
+    x = NULL
   )
 
 
@@ -844,12 +869,12 @@ nasa_involvementDF <- merge(involvementDF, NASA_TLX_DF, by = c("ID", "name", "VA
 
 ggplot(nasa_involvementDF, aes(mean, nasa_mean)) +
   geom_point() +
-  stat_smooth(method = "lm",
-              formula = y ~ x,
-              geom = "smooth")+
+#  stat_smooth(method = "lm",
+#              formula = y ~ x,
+#              geom = "smooth")+
   labs(
     y = "NASA TLX",
-    x = "Mean engagemang"
+    x = "Mean involvement"
   ) 
 
 
