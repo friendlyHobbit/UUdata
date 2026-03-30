@@ -6,7 +6,6 @@ library(dplyr)
 library(purrr)
 library(stringr)
 library(tidyr)
-#library(viridis)
 library(ggplot2)
 library(psych)
 library(ltm)
@@ -25,6 +24,22 @@ summary(dataDF)
 
 # recode 0 to NA
 #dataDF[dataDF == 0] <- NA
+
+
+########### Initial recoding #################
+
+dataDF$VAR05 <- recode_factor(
+  dataDF$VAR05,
+  `Liten (mindre än 50 anställda)` = "Small",
+  `Medelstor (mellan 50-150 anställda)` = "Medium",
+  `Stor (över 150 anställda)` = "Large"
+)
+
+dataDF$VAR00 <- recode_factor(
+  dataDF$VAR00,
+  `Markpersonal` = "Ground staff",
+  `Chef` = "Manager"
+)
 
 ########### Initial analysis #################
 
@@ -382,6 +397,22 @@ NASA_TLX_DF$nasa_mean <- rowMeans(NASA_TLX_DF[, c("VAR16_reverse", "VAR18", "VAR
 
 summary(NASA_TLX_DF)
 
+# get summary stats
+nasa_summary <- NASA_TLX_DF %>%
+  group_by(VAR00) %>%
+  summarise(
+    n = n(),
+    across(
+      where(is.numeric),
+      list(
+        mean = ~mean(.x, na.rm = TRUE),
+        sd   = ~sd(.x, na.rm = TRUE)
+      ),
+      .names = "{.col}_{.fn}"
+    ),
+    .groups = "drop"
+  )
+
 
 # VAR13
 ggplot(NASA_TLX_DF, aes(x=VAR13)) + 
@@ -610,7 +641,7 @@ involvementDF_check <- involvementDF %>%
 cronbach.alpha(involvementDF_check)
 # Items: 11
 # Sample units: 721
-# alpha: 0.917
+# alpha: 0.88
 
 # rename vars
 involvementDF <- involvementDF %>%
@@ -627,6 +658,10 @@ involvementDF <- involvementDF %>%
     `Where to turn` = VAR45_34,
     `Why implementation` = VAR46_35
   )
+
+# remove 0
+involvementDF <- involvementDF %>%
+  mutate(across(where(is.numeric), ~ na_if(.x, 0)))
 
 # mean per column
 involvement_summary <- involvementDF %>%
@@ -673,19 +708,18 @@ ggplot(involvementDF, aes(y=mean, fill = VAR00)) +
   )
 
 
-
 # to factor
 involvementDF$rMedian <- as.factor(involvementDF$rMedian)
 
 # change Labels for the x-axis
 involvementDF$rMedian <- recode_factor(
   involvementDF$rMedian,
-  `0` = "Vet ej",
-  `1` = "Inte alls",
-  `2` = "I liten utsträckning",
-  `3` = "I viss utsträckning",
-  `4` = "I stor utsträckning",
-  `5` = "I mycket stor utsträckning"
+  `0` = "Do not know",
+  `1` = "Not at all",
+  `2` = "To a small extent",
+  `3` = "To a certain extent",
+  `4` = "To a large extent",
+  `5` = "To a very large extent"
 )
 
 # plots - median for airport size
@@ -716,7 +750,7 @@ ggplot(involvementDF, aes(x = factor(rMedian), fill = VAR05)) +
 # median staff vs manager
 ggplot(involvementDF, aes(x = rMedian, fill = VAR00)) +
   facet_wrap(~name, labeller = labeller(name = addToolCount(involvementDF))) +
-  geom_bar(position = "dodge", stat = "count", binwidth = 0.1) +
+  geom_bar(position = "dodge", stat = "count") +
   labs(
     y = "count",
     x = "Involvement (median)",
@@ -729,7 +763,7 @@ ggplot(involvementDF, aes(x = rMedian, fill = VAR00)) +
 ggplot(involvementDF, aes(x = factor(rMedian), fill = VAR00)) +
   geom_bar(position = "fill") +
   labs(
-    x = "Median involvement",
+    x = "Involvement (median)",
     y = "Proportion",
     fill = "Role"
   ) +
@@ -739,140 +773,136 @@ ggplot(involvementDF, aes(x = factor(rMedian), fill = VAR00)) +
 
 
 # VAR25_36
-ggplot(involvementDF, aes(x = VAR25_36, fill = VAR05)) +
+ggplot(involvementDF, aes(x = Participation, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     y = "count",
     x = NULL,
     fill = "Storlek flygplatsen",
-    title = "VAR25_36"
+    title = "Participation"
   ) +
   theme_minimal() 
 
 # VAR26_37 
-ggplot(involvementDF, aes(x = VAR26_37, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Way of work`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     y = "count",
     x = NULL,
-    title = "VAR26_37"
+    title = "Way of work"
   ) +
   theme_minimal() 
 
 # VAR27_38
-ggplot(involvementDF, aes(x = VAR27_38, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Offer Implement`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     y = "count",
-    title = "VAR27_38",
+    title = "Offer Implement",
     x = NULL
   ) +
   theme_minimal() 
 
 # VAR28_39
-ggplot(involvementDF, aes(x = VAR28_39, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Offer way of work`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     y = "count",
     x = NULL,
-    title = "VAR28_39"
+    title = "Offer way of work"
   ) +
   theme_minimal() 
 
 # VAR29_40
-ggplot(involvementDF, aes(x = VAR29_40, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Opinions affect imp.`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "VAR29_40"
+    title = "Opinions affect imp."
   ) +
   theme_minimal() 
 
 # VAR30_41 
-ggplot(involvementDF, aes(x = VAR30_41, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Opinions affect work`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "VAR30_41"
+    title = "Opinions affect work"
   ) +
   theme_minimal() 
 
-ggplot(involvementDF, aes(x = VAR31_42, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Work environment focus`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "VAR31_42"
+    title = "Work environment focus"
   ) +
   theme_minimal() 
 
 # VAR43_32
-ggplot(involvementDF, aes(x = VAR43_32, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Risk analysis`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "VAR43_32 "
+    title = "Risk analysis"
   ) +
   theme_minimal() 
 
 # VAR33 - Har någon av dina kollegor medverkat i något utvecklingsarbete? 
-ggplot(involvementDF, aes(x = VAR44_33, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Colleague Involved`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "VAR33_44 "
+    title = "Colleague Involved "
   ) +
   theme_minimal() 
 
 # VAR45_34
-ggplot(involvementDF, aes(x = VAR45_34, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Where to turn`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "VAR45_34"
+    title = "Where to turn"
   ) +
   theme_minimal() 
 
 # VAR46_35
-ggplot(involvementDF, aes(x = VAR46_35, fill = VAR05)) +
+ggplot(involvementDF, aes(x = `Why implementation`, fill = VAR05)) +
   facet_wrap(~name) +
   geom_bar(position = "stack") +
   labs(
     fill = "Storlek flygplatsen",
     x = NULL,
     y = "count",
-    title = "VAR46_35"
+    title = "Why implementation"
   ) +
   theme_minimal() 
 
-
-
-
-# differences between roles?
 
 
 
@@ -929,10 +959,10 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
 nasa_involvementDF <- merge(involvementDF, NASA_TLX_DF, by = c("ID", "name", "VAR00", "VAR05"))
 
 ggplot(nasa_involvementDF, aes(mean, nasa_mean)) +
-  geom_point() +
-#  stat_smooth(method = "lm",
-#              formula = y ~ x,
-#              geom = "smooth")+
+  geom_point(alpha=0.6) +
+  stat_smooth(method = "lm",
+              formula = y ~ x,
+              geom = "smooth")+
   labs(
     y = "NASA TLX",
     x = "Mean involvement"
