@@ -244,6 +244,7 @@ toLongDF <- function(df, var){
   return(long_df)
 }
 
+
 ########### Tech #############
 
 VAR08_DF <- toLongDF(dataDF, "VAR08")
@@ -339,11 +340,11 @@ ggplot(VAR11_DF, aes(x = VAR11, fill = VAR05)) +
 ############## NASA TLX ##################
 
 labels_tech <- c(
-  "iPad", "Smartphone", "BRS", "De-icing bil", "Bagagetransport",
-  "Räddningsfordon", "Power Stow", "Lastband", "Tankbil",
-  "Water/Waste", "Fingerscanner", "Lyfthjälpmedel", "Pushback",
-  "Stationär eller bärbar dator", "Digitalisering (i allmänhet)",
-  "Gater", "Inget ovanstående"
+  "iPad", "Smartphone", "BRS", "De-icing vehicle", "Baggage transporter",
+  "Rescue vehicles", "Power Stow", "Belt loaders", "Refueler truck",
+  "Water/Waste", "Fingerscanner", "Lifting systems", "Pushback",
+  "Stationary or laptop computer", "Digitalization (in general)",
+  "Gates", "None of the above"
 )
 
 RecodeTech <- function(df, prefix, col = "name") {
