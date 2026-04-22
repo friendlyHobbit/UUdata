@@ -959,6 +959,8 @@ ggplot(NASA_TLX_DF, aes(name, nasa_mean)) +
 # involvement x nasa tlx
 nasa_involvementDF <- merge(involvementDF, NASA_TLX_DF, by = c("ID", "name", "VAR00", "VAR05"))
 
+summary(nasa_involvementDF)
+
 ggplot(nasa_involvementDF, aes(mean, nasa_mean)) +
   geom_point(alpha=0.6) +
   stat_smooth(method = "lm",
